@@ -1,7 +1,13 @@
-import { IResponse } from "application";
 import { ServerResponse } from "http";
-export class Response implements IResponse {
+import { IResponse } from "../../application/interfaces/http/IResponse";
+import { IRoute } from "../../application/interfaces/http/IRoute";
+import { ILogger } from "../../application/interfaces/logger/ILogger";
+import { LoggerConsole } from "../../infrastructure/logger/LoggerConsole";
+
+export class HttpResponse implements IResponse {
   response: ServerResponse;
+  route?: IRoute;
+  logger: ILogger;
   /**
    * Initializes a new instance of the Response class with the given
    * ServerResponse object.
@@ -9,9 +15,12 @@ export class Response implements IResponse {
    * @param response - The ServerResponse object to use for sending the
    * response.
    */
-  constructor(response: ServerResponse) {
+  constructor(response: ServerResponse, route: IRoute) {
     this.response = response;
+    this.route = route;
+    this.logger = new LoggerConsole();
   }
+
   /**
    * Sets the HTTP status code of the response.
    *
@@ -42,7 +51,6 @@ export class Response implements IResponse {
    */
   json<T>(data: T, status?: number): void {
     this.response.setHeader("Content-Type", "application/json");
-    this.response.statusCode = status ?? 200;
-    this.response.end(JSON.stringify(data));
+    this.status(status || 200).send(JSON.stringify(data));
   }
 }

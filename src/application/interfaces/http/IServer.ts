@@ -1,6 +1,6 @@
 import { IController } from "./IController";
 
 export interface IServer {
-  listen(port: number): Promise<void>;
+  listen(): Promise<void>;
   addController(...controllers: IController[]): void;
 }

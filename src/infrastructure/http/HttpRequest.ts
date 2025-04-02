@@ -1,11 +1,13 @@
 import { IncomingHttpHeaders, IncomingMessage } from "http";
+import { IRequest } from "../../application/interfaces/http/IRequest";
+import { IRoute } from "../../application/interfaces/http/IRoute";
+import { IServerOptions } from "../../application/interfaces/http/IServerOptions";
 
-import { IRequest, IServerOptions } from "application";
-
-export class Request implements IRequest {
+export class HttpRequest implements IRequest {
   private options: IServerOptions;
   private request: IncomingMessage;
   private base: string;
+  private route: IRoute;
 
   /**
    * Initializes a new instance of the Request class.
@@ -13,10 +15,48 @@ export class Request implements IRequest {
    * @param options - The server options including host, port, and protocol.
    */
 
-  constructor(request: IncomingMessage, options: IServerOptions) {
+  constructor(
+    request: IncomingMessage,
+    options: IServerOptions,
+    route: IRoute
+  ) {
     this.options = options;
     this.request = request;
     this.base = `${this.options.protocol}://${this.options.host}:${this.options.port}`;
+    this.route = route;
+  }
+
+  public async getParam<T = string>(name: string): Promise<T> {
+    return new Promise((resolve) => {
+      // 1) Dividimos el patrón en segmentos
+      const patternSegments = this.route.path.split("/").filter(Boolean);
+      // 2) Dividimos la URL real en segmentos
+      const urlSegments = (this.request.url ?? "").split("/").filter(Boolean);
+
+      // Limpieza por si el nombre viene con ":" (e.g. ":id")
+      const cleanName = name.replace(/^:/, "");
+
+      let value: string | undefined;
+
+      // Recorremos los segmentos del patrón
+      for (let i = 0; i < patternSegments.length; i++) {
+        const segment = patternSegments[i]; // e.g. ":id" o "users"
+
+        if (segment.startsWith(":")) {
+          // es un parámetro
+          const paramName = segment.slice(1); // e.g. "id"
+          if (paramName === cleanName) {
+            // Si coincide con el paramName que buscamos,
+            // extraemos el valor desde la URL en la misma posición
+            value = urlSegments[i];
+            break;
+          }
+        }
+      }
+
+      // value podría ser undefined si no encontró nada
+      resolve(value as T);
+    });
   }
 
   /**
