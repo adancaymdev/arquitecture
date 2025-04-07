@@ -1,4 +1,4 @@
-import { Logger } from "@application/abstracts/logger/Logger";
+import { Logger } from "@domain/abstracts/logger/Logger";
 import { Injectable } from "@infrastructure/dependency-inyection/dependency";
 /**
  * Implementation of the {@link Logger} interface that logs to the console.

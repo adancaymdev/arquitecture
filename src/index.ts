@@ -1,8 +1,8 @@
 import "reflect-metadata";
 
-import { IServer } from "@application/interfaces/http/IServer";
+import type { IServer } from "@domain/interfaces/http/IServer";
 import { dependency } from "@infrastructure/dependency-inyection/dependency";
-import { UserServer } from "@presentation/server/UserServer";
+import { UserServer } from "@infrastructure/http/UserServer";
 
 /**
  * Bootstraps the application by creating an instance of the UserServer class,

@@ -1,12 +1,12 @@
-import { Server } from "@application/abstracts/http/Server";
-import type { Exception } from "@application/exceptions/Exception";
-import type { IRoute } from "@application/interfaces/http/IRoute";
-import type { IServerOptions } from "@application/interfaces/http/IServerOptions";
-import type { ILogger } from "@application/interfaces/logger/ILogger";
-import { HttpRequest } from "@infrastructure/http/HttpRequest";
-import { HttpResponse } from "@infrastructure/http/HttpResponse";
-import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
+import { Server } from "@domain/abstracts/http/Server";
+import type { Exception } from "@domain/exceptions/Exception";
+import type { IRoute } from "@domain/interfaces/http/IRoute";
+import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
+import type { ILogger } from "@domain/interfaces/logger/ILogger";
+
 import { type IncomingMessage, type ServerResponse, createServer } from "http";
+import { HttpRequest } from "./HttpRequest";
+import { HttpResponse } from "./HttpResponse";
 
 /**
  * Represents an HTTP server that can listen on a port and register controllers.
@@ -24,10 +24,10 @@ export class HttpServer extends Server {
    * Initializes a new instance of the HttpServer class.
    * @param options - The server options for the HTTP server.
    */
-  constructor(options: IServerOptions) {
+  constructor(options: IServerOptions, logger: ILogger) {
     super(options);
     this.base = `${options.protocol}://${options.host}:${options.port}/${options.path}`;
-    this.logger = new LoggerConsole();
+    this.logger = logger;
   }
 
   /**

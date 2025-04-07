@@ -1,9 +1,9 @@
-import { BadRequestException } from "@application/exceptions/BadRequestException";
-import type { IController } from "@application/interfaces/http/IController";
-import type { IRoute } from "@application/interfaces/http/IRoute";
-import type { IServer } from "@application/interfaces/http/IServer";
-import type { IServerOptions } from "@application/interfaces/http/IServerOptions";
-import type { ILogger } from "@application/interfaces/logger/ILogger";
+import { BadRequestException } from "@domain/exceptions/BadRequestException";
+import type { IController } from "@domain/interfaces/http/IController";
+import type { IRoute } from "@domain/interfaces/http/IRoute";
+import type { IServer } from "@domain/interfaces/http/IServer";
+import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
+import type { ILogger } from "@domain/interfaces/logger/ILogger";
 import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 /**
  * Represents an HTTP server that can listen on a port and register controllers.

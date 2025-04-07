@@ -1,8 +1,8 @@
+import type { IMethodName } from "@domain/interfaces/http/IMethodName";
+import type { IRequest } from "@domain/interfaces/http/IRequest";
+import type { IResponse } from "@domain/interfaces/http/IResponse";
+import type { IRoute } from "@domain/interfaces/http/IRoute";
 import "reflect-metadata";
-import type { IMethodName } from "../../application/interfaces/http/IMethodName";
-import type { IRequest } from "../../application/interfaces/http/IRequest";
-import type { IResponse } from "../../application/interfaces/http/IResponse";
-import type { IRoute } from "../../application/interfaces/http/IRoute";
 
 /**
  * Class decorator for HTTP controllers.

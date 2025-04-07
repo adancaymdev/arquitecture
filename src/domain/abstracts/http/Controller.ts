@@ -1,4 +1,4 @@
-import { type IController } from "@application/interfaces/http/IController";
+import type { IController } from "@domain/interfaces/http/IController";
 import type { HttpRequest } from "@infrastructure/http/HttpRequest";
 import type { HttpResponse } from "@infrastructure/http/HttpResponse";
 

@@ -1,6 +1,6 @@
+import type { IMethodName } from "@domain/interfaces/http/IMethodName";
+import type { IRoute } from "@domain/interfaces/http/IRoute";
 import "reflect-metadata";
-import type { IMethodName } from "../../application/interfaces/http/IMethodName";
-import type { IRoute } from "../../application/interfaces/http/IRoute";
 
 /**
  * Decorador para definir una ruta a partir de la implementación del handler.

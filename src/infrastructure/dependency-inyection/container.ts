@@ -1,6 +1,7 @@
-import { UserController } from "../../presentation/controllers/UserController";
-import { LoggerConsole } from "../logger/LoggerConsole";
+import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
+import { UserController } from "@presentation/controllers/UserController";
 import { dependency } from "./dependency";
+
 /**
  * This module provides the dependency injection container.
  *

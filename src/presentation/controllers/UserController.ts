@@ -1,9 +1,9 @@
-import { Controller } from "../../application/abstracts/http/Controller";
-import { Injectable } from "../../infrastructure/dependency-inyection/dependency";
-import { HttpController } from "../../infrastructure/http/HttpController";
-import { HttpMethod } from "../../infrastructure/http/HttpMethod";
-import type { HttpRequest } from "../../infrastructure/http/HttpRequest";
-import type { HttpResponse } from "../../infrastructure/http/HttpResponse";
+import { Controller } from "@domain/abstracts/http/Controller";
+import { Injectable } from "@infrastructure/dependency-inyection/dependency";
+import { HttpController } from "@infrastructure/http/core/HttpController";
+import { HttpMethod } from "@infrastructure/http/core/HttpMethod";
+import type { HttpRequest } from "@infrastructure/http/core/HttpRequest";
+import type { HttpResponse } from "@infrastructure/http/core/HttpResponse";
 
 /**
  * Controller that handles the requests related to users.

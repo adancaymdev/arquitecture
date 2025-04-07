@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.2.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "tsyringe": "^4.8.0"
   },
   "engines": {

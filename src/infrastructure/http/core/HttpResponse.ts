@@ -1,6 +1,6 @@
-import type { IResponse } from "@application/interfaces/http/IResponse";
-import type { IRoute } from "@application/interfaces/http/IRoute";
-import type { ILogger } from "@application/interfaces/logger/ILogger";
+import type { IResponse } from "@domain/interfaces/http/IResponse";
+import type { IRoute } from "@domain/interfaces/http/IRoute";
+import type { ILogger } from "@domain/interfaces/logger/ILogger";
 import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 import { ServerResponse } from "http";
 

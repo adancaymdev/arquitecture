@@ -1,12 +1,12 @@
-import type { IController } from "@application/interfaces/http/IController";
-import type { IServerOptions } from "@application/interfaces/http/IServerOptions";
-import type { ILogger } from "@application/interfaces/logger/ILogger";
+import type { IController } from "@domain/interfaces/http/IController";
+import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
+import type { ILogger } from "@domain/interfaces/logger/ILogger";
 import { TOKENS } from "@infrastructure/dependency-inyection/container";
 import {
   Inject,
   Injectable,
 } from "@infrastructure/dependency-inyection/dependency";
-import { HttpServer } from "@infrastructure/http/HttpServer";
+import { HttpServer } from "./core/HttpServer";
 
 @Injectable()
 export class UserServer extends HttpServer {
