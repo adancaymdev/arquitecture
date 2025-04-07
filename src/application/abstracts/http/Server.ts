@@ -1,14 +1,14 @@
 import { LoggerConsole } from "../../../infrastructure/logger/LoggerConsole";
 import { IController } from "../../interfaces/http/IController";
-import { IRoute } from "../../interfaces/http/IRoute";
 import { IServer } from "../../interfaces/http/IServer";
 import { IServerOptions } from "../../interfaces/http/IServerOptions";
 import { ILogger } from "../../interfaces/logger/ILogger";
+import { IRoute } from "./../../interfaces/http/IRoute";
 
 export abstract class Server implements IServer {
   protected routes: IRoute[] = [];
   protected options: IServerOptions;
-  protected readonly logger: ILogger;
+  protected readonly logger: ILogger = new LoggerConsole();
 
   /**
    * Initializes a new instance of the HttpServer class with the provided server options.
@@ -17,42 +17,46 @@ export abstract class Server implements IServer {
 
   constructor(options: IServerOptions) {
     this.options = options;
-    this.logger = new LoggerConsole();
   }
 
   /**
-   * Adds one or more controllers to the server. Each controller's methods are
-   * extracted and added to the server's routes.
-   * @param controllers - The controller instances containing the methods to be registered as routes.
+   * Registers the routes of the given controllers with the server.
+   * @param controllers - The controllers to register with the server.
+   * @throws {Error} If a route with the same name is already registered.
    */
-
   public addController(...controllers: IController[]) {
     controllers.forEach((controller) => {
-      // Obtener el prototipo
       const proto = Object.getPrototypeOf(controller);
 
-      // Obtener todas las propiedades "propias" del prototipo (métodos de la clase)
       const methodNames = Object.getOwnPropertyNames(proto).filter(
-        (methodName) =>
-          methodName !== "constructor" &&
-          typeof proto[methodName] === "function"
+        (methodName) => {
+          if (methodName === "constructor") return false;
+          else if (typeof proto[methodName] === "function") return true;
+          else return false;
+        }
       );
 
-      // Invocar cada método para que devuelva IRoute (o lo que necesites)
       methodNames.forEach((methodName) => {
-        const route = controller[methodName]();
+        const route: IRoute = proto[methodName]();
+        if (!route) return;
+        if (this.routes.find((r) => r.name === methodName)) {
+          throw new Error(
+            `Route with name ${methodName} already exists in the server.`
+          );
+        }
         this.routes.push({
           name: methodName,
-          ...route,
           path: `${this.options.path}${route.path}`,
+          method: route.method,
+          handler: route.handler,
         });
       });
       this.logger.table(
         this.routes.map((r) => ({
-          name: r.name,
-          method: r.method,
-          path: r.path,
-        }))
+          ...r,
+          path: `${this.options.protocol}://${this.options.host}:${this.options.port}/${r.path}`,
+        })),
+        ["name", "path", "method"]
       );
     });
   }

@@ -14,5 +14,11 @@
     "@types/node": "^22.13.15",
     "typescript": "^5.8.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0"
+  },
+  "engines": {
+    "node": ">=22.14.0"
+  }
 }

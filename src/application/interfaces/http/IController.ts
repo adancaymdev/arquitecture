@@ -1,5 +1,14 @@
-import { IRoute } from "./IRoute";
-
+/**
+ * Interface for a controller that defines methods returning routes.
+ */
 export interface IController {
-  [methodName: string]: (...args: any[]) => IRoute;
+  /**
+   * The name of the controller.
+   * @type {string}
+   * @default "Controller"
+   * @readonly
+   * @static
+   * @memberof IController
+   * */
+  [methodName: string]: (...args: any[]) => Promise<void>;
 }

@@ -8,12 +8,12 @@ export class HttpResponse implements IResponse {
   response: ServerResponse;
   route?: IRoute;
   logger: ILogger;
+
   /**
-   * Initializes a new instance of the Response class with the given
-   * ServerResponse object.
+   * Initializes a new instance of the HttpResponse class.
    *
-   * @param response - The ServerResponse object to use for sending the
-   * response.
+   * @param response - The server response object used to interact with the HTTP response.
+   * @param route - The route associated with the current HTTP request.
    */
   constructor(response: ServerResponse, route: IRoute) {
     this.response = response;

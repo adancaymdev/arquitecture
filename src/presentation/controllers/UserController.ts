@@ -1,38 +1,24 @@
 import { Controller } from "../../application/abstracts/http/Controller";
-import { IRoute } from "../../application/interfaces/http/IRoute";
+import { Injectable } from "../../infrastructure/dependency-inyection/dependency";
+import { HttpController } from "../../infrastructure/http/HttpController";
+import { HttpMethod } from "../../infrastructure/http/HttpMethod";
+import type { HttpRequest } from "../../infrastructure/http/HttpRequest";
+import type { HttpResponse } from "../../infrastructure/http/HttpResponse";
 
+/**
+ * User controller.
+ */
+@Injectable()
+@HttpController()
 export class UserController extends Controller {
-  public getAllUsers(): IRoute {
-    return {
-      method: "get",
-      path: "/",
-      handler: async (req, res) => {
-        res.json({
-          data: await req.getBody(),
-        });
-      },
-    };
-  }
-
-  public getOneUser(): IRoute {
-    return {
-      method: "get",
-      path: "/:id",
-      handler: async (req, res) => {
-        const id = await req.getParam("id");
-        res.json({ message: "Get one user with id: " + id });
-      },
-    };
-  }
-
-  public getOneUserByID(): IRoute {
-    return {
-      method: "get",
-      path: "/one/:id",
-      handler: async (req, res) => {
-        const id = await req.getParam("id");
-        res.json({ message: "Get one user with id: " + id });
-      },
-    };
+  @HttpMethod("get", "/:id")
+  /**
+   * Gets a user by its ID.
+   * @param req - The request that contains the user ID as a route parameter.
+   * @param res - The response that will be sent with the user data.
+   */
+  public async getOneUser(req: HttpRequest, res: HttpResponse): Promise<void> {
+    const id = await req.getParam("id");
+    res.json({ message: "Get one user with id: " + id });
   }
 }

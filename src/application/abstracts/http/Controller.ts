@@ -1,6 +1,5 @@
-import { IController } from "../../interfaces/http/IController";
-import { IRoute } from "../../interfaces/http/IRoute";
+import type { IController } from "../../interfaces/http/IController";
 
 export abstract class Controller implements IController {
-  [methodName: string]: (...args: any[]) => IRoute;
+  [methodName: string]: (...args: any[]) => Promise<void>;
 }

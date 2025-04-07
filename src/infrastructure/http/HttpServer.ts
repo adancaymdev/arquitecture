@@ -4,18 +4,20 @@ import { Exception } from "../../application/exceptions/Exception";
 import { IRoute } from "../../application/interfaces/http/IRoute";
 import { IServerOptions } from "../../application/interfaces/http/IServerOptions";
 import { ILogger } from "../../application/interfaces/logger/ILogger";
-import { LoggerConsole } from "../logger/LoggerConsole";
 import { HttpRequest } from "./HttpRequest";
 import { HttpResponse } from "./HttpResponse";
 
 export class HttpServer extends Server {
-  protected logger: ILogger;
   private base: string;
 
-  constructor(options: IServerOptions) {
+  /**
+   * Initializes a new instance of the HttpServer class.
+   * @param {IServerOptions} options The server options for the HTTP server.
+   * @param {ILogger} logger The logger to use for logging.
+   */
+  constructor(options: IServerOptions, protected readonly logger: ILogger) {
     super(options);
     this.base = `${options.protocol}://${options.host}:${options.port}/${options.path}`;
-    this.logger = new LoggerConsole();
   }
   /**
    * Starts the HTTP server on the specified port.

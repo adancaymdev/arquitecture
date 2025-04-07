@@ -1,17 +1,23 @@
-import http, { IncomingMessage, ServerResponse } from "http";
+import { type IncomingMessage, type ServerResponse, createServer } from "http";
+
 import { Server } from "../../application/abstracts/http/Server";
 import { Exception } from "../../application/exceptions/Exception";
 import { IRoute } from "../../application/interfaces/http/IRoute";
 import { IServerOptions } from "../../application/interfaces/http/IServerOptions";
 import { ILogger } from "../../application/interfaces/logger/ILogger";
+import { HttpRequest } from "../../infrastructure/http/HttpRequest";
+import { HttpResponse } from "../../infrastructure/http/HttpResponse";
 import { LoggerConsole } from "../../infrastructure/logger/LoggerConsole";
-import { HttpRequest } from "./HttpRequest";
-import { HttpResponse } from "./HttpResponse";
 
 export class HttpServer extends Server {
   protected logger: ILogger;
   private base: string;
 
+  /**
+   * Initializes a new instance of the HttpServer class.
+   * @param {IServerOptions} options The server options for the HTTP server.
+   * @memberof HttpServer
+   */
   constructor(options: IServerOptions) {
     super(options);
     this.base = `${options.protocol}://${options.host}:${options.port}/${options.path}`;
@@ -33,7 +39,7 @@ export class HttpServer extends Server {
    */
   public listen(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const server = http.createServer((req, res) => {
+      const server = createServer((req, res) => {
         this.handleRequest(req, res);
       });
 
@@ -60,8 +66,8 @@ export class HttpServer extends Server {
    */
 
   protected handleRoute(
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
+    req: IncomingMessage,
+    res: ServerResponse,
     route?: IRoute
   ) {
     if (!route) {
