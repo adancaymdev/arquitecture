@@ -1,7 +1,14 @@
 import { UserController } from "../../presentation/controllers/UserController";
 import { LoggerConsole } from "../logger/LoggerConsole";
 import { dependency } from "./dependency";
-
+/**
+ * This module provides the dependency injection container.
+ *
+ * The dependency injection container is a singleton that manages the instances of the application's components.
+ * It provides a way to register components and retrieve them with their dependencies resolved.
+ *
+ * @packageDocumentation
+ */
 export const TOKENS = {
   UserServerOptions: "UserServerOptions",
   UserController: "UserController",

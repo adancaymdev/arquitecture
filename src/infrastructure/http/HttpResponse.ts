@@ -5,8 +5,17 @@ import { ILogger } from "../../application/interfaces/logger/ILogger";
 import { LoggerConsole } from "../logger/LoggerConsole";
 
 export class HttpResponse implements IResponse {
+  /**
+   * The server response object used to interact with the HTTP response.
+   */
   response: ServerResponse;
+  /**
+   * The route associated with the current HTTP request.
+   */
   route?: IRoute;
+  /**
+   * The logger used to log HTTP related events.
+   */
   logger: ILogger;
 
   /**

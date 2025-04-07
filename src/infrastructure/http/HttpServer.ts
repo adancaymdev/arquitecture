@@ -7,6 +7,14 @@ import { ILogger } from "../../application/interfaces/logger/ILogger";
 import { HttpRequest } from "./HttpRequest";
 import { HttpResponse } from "./HttpResponse";
 
+/**
+ * Represents an HTTP server that can listen on a port and register controllers.
+ * @remarks
+ * It creates an HTTP server instance that listens for incoming requests.
+ * For each request, it checks for the presence of an HTTP method and URL.
+ * If either is missing, it sends a 'Bad Request' response with a 400 status code.
+ * Otherwise, it retrieves the corresponding route and handles the request.
+ */
 export class HttpServer extends Server {
   private base: string;
 
@@ -55,27 +63,36 @@ export class HttpServer extends Server {
   /**
    * Handles an incoming HTTP request by executing the associated route handler.
    * If the route is not found, sends a 'Not Found' response with a 404 status code.
+   * If an error occurs during handler execution, sends a 'Internal Server Error' response with a 500 status code.
    *
    * @param req - The incoming HTTP request message.
    * @param res - The outgoing HTTP server response message.
    * @param route - The route object containing the method handler, or undefined if no route matches.
+   * @remarks
+   * This method is the core request handling method of the HTTP server.
+   * It takes an incoming HTTP request and checks if there is a registered route matching the request's method and URL.
+   * If there is a matching route, it calls the associated route handler with the request and response objects.
+   * If the route handler throws an error, it catches the error and sends a 'Internal Server Error' response.
+   * If there is no matching route, it sends a 'Not Found' response with a 404 status code.
    */
-
   protected handleRoute(
     req: http.IncomingMessage,
     res: http.ServerResponse,
     route?: IRoute
   ) {
     if (!route) {
+      // If there is no matching route, send a 'Not Found' response with a 404 status code
       res.statusCode = 404;
       return res.end("Not Found");
     }
     try {
+      // Call the associated route handler with the request and response objects
       route.handler(
         new HttpRequest(req, this.options, route),
         new HttpResponse(res, route)
       );
     } catch (error: Exception | any) {
+      // If an error occurs during handler execution, catch the error and send a 'Internal Server Error' response with a 500 status code
       res.statusCode = error.code || 500;
       return res.end(error.message);
     }

@@ -1,20 +1,43 @@
+import { BadRequestException } from "@application/exceptions/BadRequestException";
+import { IRequest } from "@application/interfaces/http/IRequest";
+import { IRoute } from "@application/interfaces/http/IRoute";
+import { IServerOptions } from "@application/interfaces/http/IServerOptions";
 import { IncomingHttpHeaders, IncomingMessage } from "http";
-import { IRequest } from "../../application/interfaces/http/IRequest";
-import { IRoute } from "../../application/interfaces/http/IRoute";
-import { IServerOptions } from "../../application/interfaces/http/IServerOptions";
 
+/**
+ * Represents an HTTP request.
+ *
+ * @remarks
+ * This class is not meant to be instantiated directly. Instead, it is created by the
+ * {@link HttpServer} when a request is received.
+ */
 export class HttpRequest implements IRequest {
+  /**
+   * The server options including host, port, and protocol.
+   */
   private options: IServerOptions;
+
+  /**
+   * The incoming HTTP request message.
+   */
   private request: IncomingMessage;
+
+  /**
+   * The base URL of the server.
+   */
   private base: string;
+
+  /**
+   * The route that matched the request.
+   */
   private route: IRoute;
 
   /**
    * Initializes a new instance of the Request class.
    * @param request - The incoming HTTP request message.
    * @param options - The server options including host, port, and protocol.
+   * @param route
    */
-
   constructor(
     request: IncomingMessage,
     options: IServerOptions,
@@ -29,7 +52,7 @@ export class HttpRequest implements IRequest {
   /**
    * Retrieves a route parameter by name.
    * @param name - The name of the route parameter to retrieve.
-   * @returns The value of the route parameter, or undefined if no parameter matches.
+   * @returns The value of the route parameter
    */
   public async getParam<T = string>(name: string): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -52,6 +75,10 @@ export class HttpRequest implements IRequest {
             }
           }
         }
+        if (!value) {
+          reject(new BadRequestException(`Route param ${name} not found`));
+          return;
+        }
         resolve(value as T);
       } catch (error) {
         reject(error);
@@ -64,10 +91,16 @@ export class HttpRequest implements IRequest {
    * @returns The query string parameters as an object, or an empty object if no query string is present.
    */
   getQuery<T>(): Promise<T> {
-    return new Promise((resolve) => {
-      const parsedUrl = new URL(this.request.url ?? "", this.base);
-      const queryObject = Object.fromEntries(parsedUrl.searchParams.entries());
-      resolve(queryObject as T);
+    return new Promise((resolve, reject) => {
+      try {
+        const parsedUrl = new URL(this.request.url ?? "", this.base);
+        const queryObject = Object.fromEntries(
+          parsedUrl.searchParams.entries()
+        );
+        resolve(queryObject as T);
+      } catch (error) {
+        reject(new BadRequestException("Query not found"));
+      }
     });
   }
 
@@ -77,8 +110,12 @@ export class HttpRequest implements IRequest {
    */
   getHeaders<T>(): Promise<T & IncomingHttpHeaders> {
     const headers = this.request.headers;
-    return new Promise((resolve) => {
-      resolve(headers as T & IncomingHttpHeaders);
+    return new Promise((resolve, reject) => {
+      try {
+        resolve(headers as T & IncomingHttpHeaders);
+      } catch (error) {
+        reject(new BadRequestException("Headers not found"));
+      }
     });
   }
 
@@ -93,7 +130,7 @@ export class HttpRequest implements IRequest {
         this.request.on("data", (chunk) => (body += chunk));
         this.request.on("end", () => resolve(JSON.parse(body) as T));
       } catch (error) {
-        reject(error);
+        reject(new BadRequestException("Body not found"));
       }
     });
   }

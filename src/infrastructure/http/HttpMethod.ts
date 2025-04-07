@@ -14,18 +14,13 @@ export function HttpMethod(
   routePath: string
 ): MethodDecorator {
   return (target, propertyKey, descriptor: PropertyDescriptor) => {
-    // Guarda la implementación original del método (el handler)
     const originalMethod = descriptor.value;
 
-    // Se modifica el descriptor para que el método devuelva un IRoute
     descriptor.value = function (): IRoute {
       return {
         method: httpMethod,
         path: routePath,
-        // Se utiliza una función handler que ejecuta la implementación original
         handler: async (req: any, res: any) => {
-          // Llama al método original (el handler) con el contexto y parámetros correspondientes
-          // Nota: el método original no debe retornar nada, solo ejecutar la lógica
           await originalMethod.call(this, req, res);
         },
       };

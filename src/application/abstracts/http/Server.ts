@@ -1,10 +1,21 @@
-import { LoggerConsole } from "../../../infrastructure/logger/LoggerConsole";
-import { IController } from "../../interfaces/http/IController";
-import { IServer } from "../../interfaces/http/IServer";
-import { IServerOptions } from "../../interfaces/http/IServerOptions";
-import { ILogger } from "../../interfaces/logger/ILogger";
-import { IRoute } from "./../../interfaces/http/IRoute";
-
+import { BadRequestException } from "@application/exceptions/BadRequestException";
+import { IController } from "@application/interfaces/http/IController";
+import { IRoute } from "@application/interfaces/http/IRoute";
+import { IServer } from "@application/interfaces/http/IServer";
+import { IServerOptions } from "@application/interfaces/http/IServerOptions";
+import { ILogger } from "@application/interfaces/logger/ILogger";
+import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
+/**
+ * Represents an HTTP server that can listen on a port and register controllers.
+ * @remarks
+ * Each implementation of this abstract class must provide the implementation of the {@link listen} method.
+ * The {@link listen} method creates an HTTP server instance that listens for incoming requests.
+ * For each request, it checks for the presence of an HTTP method and URL.
+ * If either is missing, it sends a 'Bad Request' response with a 400 status code.
+ * Otherwise, it retrieves the corresponding route and handles the request.
+ * The server resolves the promise when it starts listening on the specified port,
+ * and rejects the promise if an error occurs during the server operation.
+ */
 export abstract class Server implements IServer {
   protected routes: IRoute[] = [];
   protected options: IServerOptions;
@@ -14,7 +25,6 @@ export abstract class Server implements IServer {
    * Initializes a new instance of the HttpServer class with the provided server options.
    * @param options - The server options including host, port, and protocol.
    */
-
   constructor(options: IServerOptions) {
     this.options = options;
   }
@@ -27,13 +37,10 @@ export abstract class Server implements IServer {
   public addController(...controllers: IController[]) {
     controllers.forEach((controller) => {
       const proto = Object.getPrototypeOf(controller);
-
       const methodNames = Object.getOwnPropertyNames(proto).filter(
-        (methodName) => {
-          if (methodName === "constructor") return false;
-          else if (typeof proto[methodName] === "function") return true;
-          else return false;
-        }
+        (methodName) =>
+          methodName !== "constructor" &&
+          typeof proto[methodName] === "function"
       );
 
       methodNames.forEach((methodName) => {
@@ -66,11 +73,7 @@ export abstract class Server implements IServer {
    * Sets up request handling to match incoming requests with registered routes.
    * Sends a 'Bad Request' response for requests with missing method or URL.
    * Sends a 'Not Found' response for unmatched routes.
-   *
-   * @param port - The port number on which the server listens for connections.
-   * @param callback - An optional callback function to be executed once the server starts listening.
    */
-
   public listen(): Promise<void> {
     return Promise.reject(new Error("Method not implemented."));
   }
@@ -82,51 +85,32 @@ export abstract class Server implements IServer {
    * @returns The route matching the request's method and URL, or undefined if no route matches.
    */
   protected getRoute(method: string, path: string) {
-    const methodLower = method.toLocaleLowerCase();
+    const methodLower = method.toLowerCase();
     const pathSegments = path.split("/").filter(Boolean);
 
-    return this.routes.find((r) => {
-      // Checamos que coincida el método
-      if (r.method.toLowerCase() !== methodLower) {
-        return false;
-      }
-
+    const route = this.routes.find((r) => {
+      if (r.method.toLowerCase() !== methodLower) return false;
       const routeSegments = r.path.split("/").filter(Boolean);
-      // Si difiere la cantidad de segmentos, no es match
-      if (routeSegments.length !== pathSegments.length) {
-        return false;
-      }
+      if (routeSegments.length !== pathSegments.length) return false;
 
-      // Verificamos cada segmento
-      for (let i = 0; i < routeSegments.length; i++) {
-        const routeSegment = routeSegments[i];
-        const pathSegment = pathSegments[i];
-
-        // Si el segmento comienza con ":", asumimos que es param => match implícito
-        if (routeSegment.startsWith(":")) {
-          continue; // Se considera coincidencia, no validamos valor
-        }
-
-        // De lo contrario, debe coincidir exactamente
-        if (routeSegment !== pathSegment) {
-          return false;
-        }
-      }
-
-      // Si llegamos hasta aquí, todos los segmentos encajan
-      return true;
+      return routeSegments.every(
+        (routeSegment, i) =>
+          routeSegment.startsWith(":") || routeSegment === pathSegments[i]
+      );
     });
+    if (!route) {
+      throw new BadRequestException(`Route not found for ${method} ${path}`);
+    }
+    return route;
   }
 
   /**
    * Handles an incoming HTTP request by executing the associated route handler.
    * If the route is not found, sends a 'Not Found' response with a 404 status code.
-   *
    * @param req - The incoming HTTP request message.
    * @param res - The outgoing HTTP server response message.
    * @param route - The route object containing the method handler, or undefined if no route matches.
    */
-
   protected handleRoute(req: any, res: any, route?: IRoute): void {
     throw new Error("Method not implemented.");
   }
