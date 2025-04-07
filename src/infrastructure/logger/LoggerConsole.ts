@@ -1,6 +1,5 @@
-import { Logger } from "../../application/abstracts/logger/Logger";
-import { Injectable } from "../dependency-inyection/dependency";
-
+import { Logger } from "@application/abstracts/logger/Logger";
+import { Injectable } from "@infrastructure/dependency-inyection/dependency";
 /**
  * Implementation of the {@link Logger} interface that logs to the console.
  */
@@ -24,5 +23,21 @@ export class LoggerConsole extends Logger {
    */
   table(message?: any, ...optionalParams: any[]): void {
     console.table(message, ...optionalParams);
+  }
+
+  error(message: string): void {
+    this.log(`[Error]: ${message}`);
+  }
+
+  success(message: string): void {
+    this.log(`[Success]: ${message}`);
+  }
+
+  info(message: string): void {
+    this.log(`[Info]: ${message}`);
+  }
+
+  warn(message: string): void {
+    this.log(`[Warn]: ${message}`);
   }
 }

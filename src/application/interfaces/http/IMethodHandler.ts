@@ -1,5 +1,5 @@
-import { IRequest } from "./IRequest";
-import { IResponse } from "./IResponse";
+import type { IRequest } from "./IRequest";
+import type { IResponse } from "./IResponse";
 
 /**
  * Represents a method handler, which is a function that handles a request and

@@ -1,8 +1,8 @@
 import { BadRequestException } from "@application/exceptions/BadRequestException";
-import { IRequest } from "@application/interfaces/http/IRequest";
-import { IRoute } from "@application/interfaces/http/IRoute";
-import { IServerOptions } from "@application/interfaces/http/IServerOptions";
-import { IncomingHttpHeaders, IncomingMessage } from "http";
+import type { IRequest } from "@application/interfaces/http/IRequest";
+import type { IRoute } from "@application/interfaces/http/IRoute";
+import type { IServerOptions } from "@application/interfaces/http/IServerOptions";
+import type { IncomingHttpHeaders, IncomingMessage } from "http";
 
 /**
  * Represents an HTTP request.

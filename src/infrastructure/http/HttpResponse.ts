@@ -1,8 +1,8 @@
+import type { IResponse } from "@application/interfaces/http/IResponse";
+import type { IRoute } from "@application/interfaces/http/IRoute";
+import type { ILogger } from "@application/interfaces/logger/ILogger";
+import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 import { ServerResponse } from "http";
-import { IResponse } from "../../application/interfaces/http/IResponse";
-import { IRoute } from "../../application/interfaces/http/IRoute";
-import { ILogger } from "../../application/interfaces/logger/ILogger";
-import { LoggerConsole } from "../logger/LoggerConsole";
 
 export class HttpResponse implements IResponse {
   /**

@@ -1,5 +1,5 @@
-import { IMethodHandler } from "./IMethodHandler";
-import { IMethodName } from "./IMethodName";
+import type { IMethodHandler } from "./IMethodHandler";
+import type { IMethodName } from "./IMethodName";
 
 /**
  * Represents a route.

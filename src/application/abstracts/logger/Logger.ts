@@ -1,4 +1,4 @@
-import { ILogger } from "@application/interfaces/logger/ILogger";
+import type { ILogger } from "@application/interfaces/logger/ILogger";
 
 /**
  * Abstract class to define a logger. It implements the {@link ILogger} interface.

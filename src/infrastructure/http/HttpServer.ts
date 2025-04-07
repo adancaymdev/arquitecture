@@ -1,9 +1,10 @@
 import http, { IncomingMessage, ServerResponse } from "http";
-import { Server } from "../../application/abstracts/http/Server";
-import { Exception } from "../../application/exceptions/Exception";
-import { IRoute } from "../../application/interfaces/http/IRoute";
-import { IServerOptions } from "../../application/interfaces/http/IServerOptions";
-import { ILogger } from "../../application/interfaces/logger/ILogger";
+
+import { Server } from "@application/abstracts/http/Server";
+import { Exception } from "@application/exceptions/Exception";
+import type { IRoute } from "@application/interfaces/http/IRoute";
+import type { IServerOptions } from "@application/interfaces/http/IServerOptions";
+import type { ILogger } from "@application/interfaces/logger/ILogger";
 import { HttpRequest } from "./HttpRequest";
 import { HttpResponse } from "./HttpResponse";
 

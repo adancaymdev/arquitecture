@@ -1,4 +1,4 @@
-import { IController } from "./IController";
+import type { IController } from "./IController";
 
 /**
  * Represents a server that can listen on a port and register controllers.
