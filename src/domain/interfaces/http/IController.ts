@@ -1,5 +1,5 @@
-import type { HttpRequest } from "@infrastructure/http/HttpRequest";
-import type { HttpResponse } from "@infrastructure/http/HttpResponse";
+import type { HttpRequest } from "@infrastructure/http/core/HttpRequest";
+import type { HttpResponse } from "@infrastructure/http/core/HttpResponse";
 
 /**
  * Interface that represents a controller. It is a class with methods that are
