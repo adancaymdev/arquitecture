@@ -41,7 +41,7 @@ export class HttpServer extends Server {
       });
 
       server.listen(this.options.port, () => {
-        this.logger.warn(
+        this.logger.success(
           `${new Date().toISOString()}|${this.constructor.name}|SUCCESS|${
             this.base
           }`
