@@ -1,6 +1,6 @@
 import type { IController } from "@domain/interfaces/http/IController";
-import type { HttpRequest } from "@infrastructure/http/HttpRequest";
-import type { HttpResponse } from "@infrastructure/http/HttpResponse";
+import type { HttpRequest } from "@infrastructure/http/core/HttpRequest";
+import type { HttpResponse } from "@infrastructure/http/core/HttpResponse";
 
 /**
  * Abstract class to define a controller. It implements the {@link IController} interface.
