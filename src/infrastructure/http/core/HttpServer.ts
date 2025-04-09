@@ -3,7 +3,6 @@ import type { Exception } from "@domain/exceptions/Exception";
 import type { IRoute } from "@domain/interfaces/http/IRoute";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
-
 import { type IncomingMessage, type ServerResponse, createServer } from "http";
 import { HttpRequest } from "./HttpRequest";
 import { HttpResponse } from "./HttpResponse";
