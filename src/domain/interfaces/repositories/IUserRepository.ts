@@ -14,7 +14,7 @@ export interface IUserRepository {
    * @param id - The id of the user to retrieve.
    * @returns A promise that resolves to the user if found, or null if not found.
    */
-  findById(id: string): Promise<User | null>;
+  findById(id: string): Promise<User>;
 
   /**
    * Retrieves all users.
@@ -29,7 +29,7 @@ export interface IUserRepository {
    * @param filter - The filter to apply.
    * @returns A promise that resolves to an array of users if found, or null if not found.
    */
-  findAllBy(filter: User): Promise<User[] | null>;
+  findAllBy(filter: User): Promise<User[]>;
 
   /**
    * Creates a new user.
@@ -37,7 +37,7 @@ export interface IUserRepository {
    * @param user - The user to create.
    * @returns A promise that resolves to the id of the created user.
    */
-  create(user: User): Promise<string>;
+  create(user: User): Promise<User>;
 
   /**
    * Updates an existing user.
