@@ -2,13 +2,12 @@ import { NotFoundException } from "@domain/exceptions/NotFoundException";
 import type { IDatabase } from "@domain/interfaces/persistence/IDatabase";
 import { IRepository } from "@domain/interfaces/repositories/IRepository";
 
-export abstract class RepositorySQL<T> implements IRepository<T> {
+export abstract class SqliteRepository<T> implements IRepository<T> {
   protected readonly db: IDatabase;
 
   constructor(db: IDatabase) {
     this.db = db;
   }
-
   /**
    * Retrieves a user by its id.
    * @param id - The id of the user to retrieve.

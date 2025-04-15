@@ -9,7 +9,7 @@ import type { HttpResponse } from "@infrastructure/http/HttpResponse";
  */
 export abstract class HttpController<T> implements IController {
 
-  constructor(private readonly repository: IRepository<T>) {}
+  constructor(protected readonly repository: IRepository<T>) {}
   /**
    * Retrieves a user by its id.
    * @param req The request object.

@@ -1,8 +1,8 @@
 import { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
-import { SqliteAdapter } from "@infrastructure/persistence/sql/sqlite/AdapterSqlite";
+import { SqliteAdapter } from "@infrastructure/persistence/sql/sqlite/SqliteAdapter";
 import { UserCreateTableMigration } from "@infrastructure/persistence/sql/user/migrations/UserCreateTableMigration";
-import { UserRepositorySQL } from "@infrastructure/persistence/sql/user/UserRepositorySQL";
+import { UserRepositorySqlite } from "@infrastructure/persistence/sql/user/UserRepositorySqlite";
 import { UserController } from "@presentation/http/controllers/UserController";
 import { UserServer } from "@presentation/http/UserServer";
 
@@ -35,7 +35,7 @@ export const userMs = async ({
 
   await userMigration.up(userDatabase);
 
-  const userRepository = new UserRepositorySQL(userDatabase);
+  const userRepository = new UserRepositorySqlite(userDatabase);
   const userController = new UserController(userRepository);
 
   const userServer = new UserServer(
