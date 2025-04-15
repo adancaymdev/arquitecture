@@ -22,7 +22,7 @@ export const userMs = async ({
   path = "api/users",
   protocol = "http",
   logger,
-}: MsOptions = {}) => {
+}: MsOptions) => {
   const userServerOptionsDefault: IServerOptions = {
     path,
     host,
