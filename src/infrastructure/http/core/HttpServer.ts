@@ -65,13 +65,10 @@ export class HttpServer extends Server {
         new HttpResponse(res, route)
       );
     } catch (error: Exception | any) {
-      this.logger?.error(
-        `${new Date().toISOString()}|${this.base}/${route.path}|ERROR|${
-          error.message
-        }`
-      );
       res.statusCode = error.code || 500;
       res.end(error.message);
+    } finally {
+      this.logRequestOnClose(req, res, process.hrtime.bigint());
     }
   }
 
@@ -86,5 +83,35 @@ export class HttpServer extends Server {
   ): Promise<void> {
     const route = this.getRoute(req.method, req.url);
     await this.handleRoute(req, res, route);
+  }
+
+  /**
+   * Logs the request once it has been fully processed and the response has been sent.
+   * @param req - The incoming HTTP request message.
+   * @param res - The outgoing HTTP server response message.
+   * @param startTime - The high-resolution timestamp when the request was received.
+   */
+  private logRequestOnClose(
+    req: IncomingMessage,
+    res: ServerResponse,
+    startTime: bigint
+  ): void {
+    const endTime = process.hrtime.bigint();
+    const diffMs = Number(endTime - startTime) / 1_000_000;
+
+    const timeStamp = new Date().toISOString();
+    const method = req.method || "UNKNOWN";
+    const url = req.url || "";
+    const statusCode = res.statusCode;
+
+    const logMessage = `${timeStamp}|${this.constructor.name}|${
+      statusCode >= 400 ? "ERROR" : "SUCCESS"
+    }|${this.base}${url}|${method}|${statusCode}|${diffMs.toFixed()}ms `;
+
+    if (statusCode >= 400) {
+      this.logger?.error(logMessage);
+    } else {
+      this.logger?.info(logMessage);
+    }
   }
 }

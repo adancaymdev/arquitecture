@@ -1,5 +1,6 @@
 import { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import { UserServer } from "@infrastructure/http/UserServer";
+import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 import { SqliteAdapter } from "@infrastructure/persistence/sql/sqlite/AdapterSqlite";
 import { UserCreateTableMigration } from "@infrastructure/persistence/sql/user/migrations/UserCreateTableMigration";
 import { UserRepositorySQL } from "@infrastructure/persistence/sql/user/UserRepositorySQL";
@@ -9,7 +10,7 @@ export const userMs = async (
   options?: IServerOptions,
   pathDatabase?: string
 ) => {
-  const logger = undefined;
+  const logger = new LoggerConsole();
   const pathDatabaseDefault = pathDatabase ?? "./database.user.db";
 
   const userServerOptionsDefault: IServerOptions = options ?? {
