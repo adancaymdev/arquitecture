@@ -1,22 +1,22 @@
+import { User } from "@domain/entities/User";
+import type { IController } from "@domain/interfaces/http/IController";
+import { IRepository } from "@domain/interfaces/repositories/IRepository";
+import { HttpMethod } from "@infrastructure/http/core/HttpMethod";
 import type { HttpRequest } from "@infrastructure/http/core/HttpRequest";
 import type { HttpResponse } from "@infrastructure/http/core/HttpResponse";
-import {HttpMethod} from "@infrastructure/http/core/HttpMethod";
-import type {IController} from "@domain/interfaces/http/IController";
-import {IRepository} from "@domain/interfaces/repositories/IRepository";
-import {User} from "@domain/entities/User";
 
 /**
  * Controller that handles the requests related to users.
  */
-export class UserController implements IController{
+export class UserController implements IController {
   constructor(private readonly repository: IRepository<User>) {}
+  @HttpMethod("get", "/:id")
   /**
-   * Retrieves the user with the given id.
+   * Retrieves a user by its id.
    * @param req The request object.
    * @param res The response object.
-   * @returns A promise that resolves to the user with the given id.
+   * @returns A promise that resolves to the user if found, or rejects if not found.
    */
-  @HttpMethod("get", "/:id")
   public async getOneUser(req: HttpRequest, res: HttpResponse): Promise<void> {
     const id = await req.getParam("id");
     const user = await this.repository.findById(id);
@@ -24,8 +24,14 @@ export class UserController implements IController{
   }
 
   @HttpMethod("get", "/")
+  /**
+   * Retrieves all users.
+   * @param req The request object.
+   * @param res The response object.
+   * @returns A promise that resolves to an array of users.
+   */
   public async getAllUsers(req: HttpRequest, res: HttpResponse): Promise<void> {
     const users = await this.repository.findAll();
-    res.json( users );
+    res.json(users);
   }
 }

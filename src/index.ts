@@ -6,8 +6,8 @@ import "reflect-metadata";
  * resolving it from the dependency injection container, and starting the server.
  * @returns {Promise<void>} A promise that resolves when the server starts successfully.
  */
-const bootstrap = async () => {
+async function bootstrapApplication(): Promise<void> {
   await userMs();
-};
+}
 
-bootstrap();
+bootstrapApplication();

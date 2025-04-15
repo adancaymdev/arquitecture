@@ -7,6 +7,12 @@ export class SqliteAdapter implements IDatabase {
   private table: string;
   private logger?: ILogger;
 
+  /**
+   * Constructor of the SqliteAdapter class.
+   * @param path - The path to the sqlite database file.
+   * @param table - The name of the table.
+   * @param logger - The logger to use. Optional.
+   */
   constructor(path: string, table: string, logger?: ILogger) {
     if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(table)) {
       throw new Error(`Invalid table name: ${table}`);
@@ -29,6 +35,14 @@ export class SqliteAdapter implements IDatabase {
     });
   }
 
+  /**
+   * Inserts a new record in the database.
+   *
+   * @param params - A map of column names to their respective values.
+   * @returns A promise that resolves to the inserted record.
+   * @throws An error if no parameters are provided.
+   * @throws An error if the record could not be inserted.
+   */
   async insert<T>(params: Map<string, unknown>): Promise<T> {
     if (params.size === 0) {
       throw new Error("No parameters provided for insert");
@@ -55,6 +69,14 @@ export class SqliteAdapter implements IDatabase {
     }
   }
 
+  /**
+   * Updates an existing record.
+   *
+   * @param id - The id of the record to update.
+   * @param params - The parameters to update. The keys of the map are the column names,
+   * and the values are the new values for the columns.
+   * @returns A promise that resolves to the updated record.
+   */
   async update<T>(
     id: number | string,
     params: Map<string, unknown>
