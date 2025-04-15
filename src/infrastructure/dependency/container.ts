@@ -1,25 +1,35 @@
 import { IServerOptions } from "@domain/interfaces/http/IServerOptions";
-import { UserServer } from "@infrastructure/http/UserServer";
-import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
+import type { ILogger } from "@domain/interfaces/logger/ILogger";
 import { SqliteAdapter } from "@infrastructure/persistence/sql/sqlite/AdapterSqlite";
 import { UserCreateTableMigration } from "@infrastructure/persistence/sql/user/migrations/UserCreateTableMigration";
 import { UserRepositorySQL } from "@infrastructure/persistence/sql/user/UserRepositorySQL";
-import { UserController } from "@presentation/controllers/UserController";
+import { UserController } from "@presentation/http/controllers/UserController";
+import { UserServer } from "@presentation/http/UserServer";
 
-export const userMs = async (
-  options?: IServerOptions,
-  pathDatabase?: string
-) => {
-  const logger = new LoggerConsole();
-  const pathDatabaseDefault = pathDatabase ?? "./database.user.db";
+interface MsOptions {
+  pathDatabase?: string;
+  port?: number;
+  host?: string;
+  path?: string;
+  protocol?: string;
+  logger?: ILogger;
+}
 
-  const userServerOptionsDefault: IServerOptions = options ?? {
-    port: 3000,
-    host: "localhost",
-    path: "api/users",
-    protocol: "http",
+export const userMs = async ({
+  pathDatabase = "./database.user.db",
+  port = 3000,
+  host = "localhost",
+  path = "api/users",
+  protocol = "http",
+  logger,
+}: MsOptions = {}) => {
+  const userServerOptionsDefault: IServerOptions = {
+    path,
+    host,
+    port,
+    protocol,
   };
-  const userDatabase = new SqliteAdapter(pathDatabaseDefault, "users", logger);
+  const userDatabase = new SqliteAdapter(pathDatabase, "users", logger);
 
   const userMigration = new UserCreateTableMigration(logger);
 

@@ -1,7 +1,7 @@
 import { IController } from "@domain/interfaces/http/IController";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
-import { HttpServer } from "./core/HttpServer";
+import { HttpServer } from "@infrastructure/http/HttpServer";
 
 export class UserServer extends HttpServer {
   /**

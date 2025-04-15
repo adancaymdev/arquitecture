@@ -1,4 +1,5 @@
-import { userMs } from "@infrastructure/dependency-inyection/container";
+import { userMs } from "@infrastructure/dependency/container";
+import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 import "reflect-metadata";
 
 /**
@@ -7,7 +8,10 @@ import "reflect-metadata";
  * @returns {Promise<void>} A promise that resolves when the server starts successfully.
  */
 async function bootstrapApplication(): Promise<void> {
-  await userMs();
+  await userMs({
+    logger: new LoggerConsole(),
+    port: 3000,
+  });
 }
 
 bootstrapApplication();

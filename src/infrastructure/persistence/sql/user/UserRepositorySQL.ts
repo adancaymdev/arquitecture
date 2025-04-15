@@ -1,6 +1,6 @@
 import { User } from "@domain/entities/User";
 import type { IDatabase } from "@domain/interfaces/persistence/IDatabase";
-import { RepositorySQL } from "@infrastructure/persistence/sql/user/RepositorySQL";
+import { RepositorySQL } from "@infrastructure/persistence/sql/sqlite/RepositorySQL";
 
 export class UserRepositorySQL extends RepositorySQL<User> {
   /**

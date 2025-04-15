@@ -59,6 +59,7 @@ export class HttpServer extends Server {
     res: ServerResponse,
     route: IRoute
   ): Promise<void> {
+    const startTime = process.hrtime.bigint();
     try {
       await route.handler(
         new HttpRequest(req, this.options, route),
@@ -68,7 +69,7 @@ export class HttpServer extends Server {
       res.statusCode = error.code || 500;
       res.end(error.message);
     } finally {
-      this.logRequestOnClose(req, res, process.hrtime.bigint());
+      this.logRequestOnClose(req, res, startTime);
     }
   }
 

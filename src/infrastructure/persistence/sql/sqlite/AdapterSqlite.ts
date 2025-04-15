@@ -26,11 +26,8 @@ export class SqliteAdapter implements IDatabase {
     return new Promise<void>((resolve, reject) => {
       this.logger?.table({ query: sql });
       this.db.exec(sql, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
+        if (err) reject(err);
+        else resolve();
       });
     });
   }
@@ -57,9 +54,8 @@ export class SqliteAdapter implements IDatabase {
         ", "
       )}) VALUES (${placeholders})`;
 
-      this.logger?.table({ query, values });
       const id = await this.run(query, ...values);
-      return await this.get<T>(new Map([["id", id]]));
+      return this.get<T>(new Map([["id", id]]));
     } catch (error) {
       throw new Error(
         `Failed to insert record: ${
@@ -86,7 +82,6 @@ export class SqliteAdapter implements IDatabase {
     const assignments = keys.map((key) => `${key} = ?`).join(", ");
     const query = `UPDATE ${this.table} SET ${assignments} WHERE id = ?`;
 
-    this.logger?.table({ query, values });
     const result = await this.run(query, ...values, id);
     return this.get<T>(new Map([["id", result]]));
   }
@@ -98,13 +93,11 @@ export class SqliteAdapter implements IDatabase {
     } ${clause}`;
 
     return new Promise<T[]>((resolve, reject) => {
-      this.logger?.table({ query, values });
+      this.logger?.table(query);
+      this.logger?.table(values);
       this.db.all<T>(query, values, (err, rows) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
+        if (err) reject(err);
+        else resolve(rows);
       });
     });
   }
@@ -114,32 +107,27 @@ export class SqliteAdapter implements IDatabase {
     const query = `SELECT * FROM ${this.table} WHERE ${clause}`;
 
     return new Promise<T>((resolve, reject) => {
-      this.logger?.table({ query, values });
+      this.logger?.table(query);
+      this.logger?.table(values);
       this.db.get<T>(query, values, (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(row);
-        }
+        if (err) reject(err);
+        else resolve(row);
       });
     });
   }
 
   async delete(id: number | string): Promise<void> {
     const query = `DELETE FROM ${this.table} WHERE id = ?`;
-    this.logger?.table({ query });
     await this.run(query, id);
   }
 
   private async run(query: string, ...params: unknown[]): Promise<number> {
     return new Promise<number>((resolve, reject) => {
-      this.logger?.table({ query, params });
+      this.logger?.table(query);
+      this.logger?.table(params);
       this.db.run(query, params, function (err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(this.lastID);
-        }
+        if (err) reject(err);
+        else resolve(this.lastID);
       });
     });
   }
