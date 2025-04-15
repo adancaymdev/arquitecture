@@ -84,7 +84,10 @@ export abstract class Server implements IServer {
    * @param path - The URL of the request.
    * @returns The route matching the request's method and URL, or undefined if no route matches.
    */
-  protected getRoute(method: string, path: string) {
+  protected getRoute(method?: string, path?: string) {
+    if (!method || !path) {
+      throw new BadRequestException("Missing method or path");
+    }
     const methodLower = method.toLowerCase();
     const pathSegments = path.split("/").filter(Boolean);
 

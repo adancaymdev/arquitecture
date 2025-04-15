@@ -7,4 +7,4 @@ import type { IResponse } from "./IResponse";
  * @param req - The request object.
  * @param res - The response object.
  */
-export type IMethodHandler = (req: IRequest, res: IResponse) => void;
+export type IMethodHandler =  (req: IRequest, res: IResponse) => Promise<void>;

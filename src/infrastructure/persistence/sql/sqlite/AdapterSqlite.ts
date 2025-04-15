@@ -19,7 +19,7 @@ export class SqliteAdapter implements IDatabase {
 
   async exec(sql: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.logger.log({query: sql});
+      this.logger.table({query: sql});
       this.db.exec(sql, (err) => {
         if (err) {
           reject(err);
@@ -44,7 +44,7 @@ export class SqliteAdapter implements IDatabase {
         ", "
       )}) VALUES (${placeholders})`;
 
-      this.logger.log({query, values});
+      this.logger.table({query, values});
       const id = await this.run(query, ...values);
       return await this.get<T>(new Map([["id", id]]));
     } catch (error) {
@@ -104,7 +104,7 @@ export class SqliteAdapter implements IDatabase {
 
   async delete(id: number | string): Promise<void> {
     const query = `DELETE FROM ${this.table} WHERE id = ?`;
-    this.logger.log({query});
+    this.logger.table({query});
     await this.run(query, id);
   }
 

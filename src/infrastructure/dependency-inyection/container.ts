@@ -18,18 +18,17 @@ export const userMs = async (
   const userServerOptionsDefault: IServerOptions = options ?? {
     port: 3000,
     host: "localhost",
-    path: "api",
+    path: "api/users",
     protocol: "http",
   }
   const userDatabase = new SqliteAdapter(pathDatabaseDefault, 'users', logger);
 
-  const userMigration = new UserCreateTableMigration();
+  const userMigration = new UserCreateTableMigration(logger);
 
   await userMigration.up(userDatabase);
 
   const userRepository = new UserRepositorySQL(userDatabase)
   const userController = new UserController(userRepository);
-
 
    const userServer = new UserServer(
        userServerOptionsDefault,
