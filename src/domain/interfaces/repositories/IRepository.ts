@@ -43,7 +43,7 @@ export interface IRepository<T> {
      * @param user - The user to update.
      * @returns A promise that resolves when the user is updated.
      */
-    update(user: T): Promise<T>;
+    update(id : string, user: T): Promise<T>;
 
     /**
      * Deletes a user by its id.

@@ -36,15 +36,23 @@ export abstract class Server implements IServer {
    */
   public addController(...controllers: IController[]) {
     controllers.forEach((controller) => {
-      const proto = Object.getPrototypeOf(controller);
-      const methodNames = Object.getOwnPropertyNames(proto).filter(
-        (methodName) =>
-          methodName !== "constructor" &&
-          typeof proto[methodName] === "function"
-      );
+      const methodNames = new Set<string>();
+      let proto = Object.getPrototypeOf(controller);
+
+      // Recorremos la cadena de prototipos
+      while (proto && proto !== Object.prototype) {
+        Object.getOwnPropertyNames(proto)
+          .filter(
+            (methodName) =>
+              methodName !== "constructor" &&
+              typeof proto[methodName] === "function"
+          )
+          .forEach((method) => methodNames.add(method));
+        proto = Object.getPrototypeOf(proto);
+      }
 
       methodNames.forEach((methodName) => {
-        const route: IRoute = proto[methodName]();
+        const route: IRoute = (controller as any)[methodName]?.();
         if (!route) return;
         if (this.routes.find((r) => r.name === methodName)) {
           throw new Error(
@@ -58,6 +66,7 @@ export abstract class Server implements IServer {
           handler: route.handler.bind(controller),
         });
       });
+
       this.logger?.table(
         this.routes.map((r) => ({
           ...r,

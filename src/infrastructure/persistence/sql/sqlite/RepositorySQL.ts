@@ -43,9 +43,8 @@ export abstract class RepositorySQL<T> implements IRepository<T> {
    * @param obj - The user to update, with the id set to the id of the user to update.
    * @returns A promise that resolves to the updated user if successful, or rejects if not.
    */
-  update(obj: T): Promise<T> {
+  update(id: number | string, obj: T): Promise<T> {
     const params = new Map(Object.entries(obj as object));
-    const id = params.get("id");
     return this.db.update<T>(id, params);
   }
   /**
