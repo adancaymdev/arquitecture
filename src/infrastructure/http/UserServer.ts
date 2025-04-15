@@ -1,7 +1,7 @@
+import { IController } from "@domain/interfaces/http/IController";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
 import { HttpServer } from "./core/HttpServer";
-import {IController} from "@domain/interfaces/http/IController";
 
 export class UserServer extends HttpServer {
   /**
@@ -13,10 +13,9 @@ export class UserServer extends HttpServer {
   constructor(
     options: IServerOptions,
     controllers: IController[],
-    logger: ILogger
+    logger?: ILogger
   ) {
     super(options, logger);
     this.addController(...controllers);
   }
-
 }

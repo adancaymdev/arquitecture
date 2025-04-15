@@ -19,7 +19,7 @@ import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 export abstract class Server implements IServer {
   protected routes: IRoute[] = [];
   protected options: IServerOptions;
-  protected readonly logger: ILogger = new LoggerConsole();
+  protected readonly logger?: ILogger = new LoggerConsole();
 
   /**
    * Initializes a new instance of the HttpServer class with the provided server options.
@@ -58,7 +58,7 @@ export abstract class Server implements IServer {
           handler: route.handler.bind(controller),
         });
       });
-      this.logger.table(
+      this.logger?.table(
         this.routes.map((r) => ({
           ...r,
           path: `${this.options.protocol}://${this.options.host}:${this.options.port}/${r.path}`,

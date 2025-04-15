@@ -1,5 +1,5 @@
+import { userMs } from "@infrastructure/dependency-inyection/container";
 import "reflect-metadata";
-import {userMs} from "@infrastructure/dependency-inyection/container";
 
 /**
  * Bootstraps the application by creating an instance of the UserServer class,
@@ -7,8 +7,7 @@ import {userMs} from "@infrastructure/dependency-inyection/container";
  * @returns {Promise<void>} A promise that resolves when the server starts successfully.
  */
 const bootstrap = async () => {
-
-  await userMs()
+  await userMs();
 };
 
 bootstrap();

@@ -1,14 +1,13 @@
+import { ILogger } from "@domain/interfaces/logger/ILogger";
 import type { IDatabase } from "@domain/interfaces/persistence/IDatabase";
-import  sqlite3 from "sqlite3";
-import {ILogger} from "@domain/interfaces/logger/ILogger";
-
+import sqlite3 from "sqlite3";
 
 export class SqliteAdapter implements IDatabase {
   private db: sqlite3.Database;
   private table: string;
-  private logger :ILogger;
+  private logger?: ILogger;
 
-  constructor(path: string, table: string, logger:ILogger) {
+  constructor(path: string, table: string, logger?: ILogger) {
     if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(table)) {
       throw new Error(`Invalid table name: ${table}`);
     }
@@ -19,7 +18,7 @@ export class SqliteAdapter implements IDatabase {
 
   async exec(sql: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.logger.table({query: sql});
+      this.logger?.table({ query: sql });
       this.db.exec(sql, (err) => {
         if (err) {
           reject(err);
@@ -44,7 +43,7 @@ export class SqliteAdapter implements IDatabase {
         ", "
       )}) VALUES (${placeholders})`;
 
-      this.logger.table({query, values});
+      this.logger?.table({ query, values });
       const id = await this.run(query, ...values);
       return await this.get<T>(new Map([["id", id]]));
     } catch (error) {
@@ -65,17 +64,19 @@ export class SqliteAdapter implements IDatabase {
     const assignments = keys.map((key) => `${key} = ?`).join(", ");
     const query = `UPDATE ${this.table} SET ${assignments} WHERE id = ?`;
 
-    this.logger.table({query, values});
+    this.logger?.table({ query, values });
     const result = await this.run(query, ...values, id);
     return this.get<T>(new Map([["id", result]]));
   }
 
   async all<T>(params?: Map<string, unknown>): Promise<T[]> {
     const { clause, values } = this.buildWhereClause(params);
-    const query = `SELECT * FROM ${this.table} ${params ? "WHERE" : ""} ${ clause}`;
+    const query = `SELECT * FROM ${this.table} ${
+      params ? "WHERE" : ""
+    } ${clause}`;
 
     return new Promise<T[]>((resolve, reject) => {
-      this.logger.table({query, values});
+      this.logger?.table({ query, values });
       this.db.all<T>(query, values, (err, rows) => {
         if (err) {
           reject(err);
@@ -91,7 +92,7 @@ export class SqliteAdapter implements IDatabase {
     const query = `SELECT * FROM ${this.table} WHERE ${clause}`;
 
     return new Promise<T>((resolve, reject) => {
-      this.logger.table({query, values});
+      this.logger?.table({ query, values });
       this.db.get<T>(query, values, (err, row) => {
         if (err) {
           reject(err);
@@ -104,13 +105,13 @@ export class SqliteAdapter implements IDatabase {
 
   async delete(id: number | string): Promise<void> {
     const query = `DELETE FROM ${this.table} WHERE id = ?`;
-    this.logger.table({query});
+    this.logger?.table({ query });
     await this.run(query, id);
   }
 
   private async run(query: string, ...params: unknown[]): Promise<number> {
     return new Promise<number>((resolve, reject) => {
-      this.logger.table({query, params});
+      this.logger?.table({ query, params });
       this.db.run(query, params, function (err) {
         if (err) {
           reject(err);

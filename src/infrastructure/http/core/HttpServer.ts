@@ -16,7 +16,7 @@ import { HttpResponse } from "./HttpResponse";
  * Otherwise, it retrieves the corresponding route and handles the request.
  */
 export class HttpServer extends Server {
-  protected logger: ILogger;
+  protected logger?: ILogger;
   private base: string;
 
   /**
@@ -24,7 +24,7 @@ export class HttpServer extends Server {
    * @param options - The server options for the HTTP server.
    * @param logger
    */
-  constructor(options: IServerOptions, logger: ILogger) {
+  constructor(options: IServerOptions, logger?: ILogger) {
     super(options);
     this.base = `${options.protocol}://${options.host}:${options.port}`;
     this.logger = logger;
@@ -38,7 +38,7 @@ export class HttpServer extends Server {
     return new Promise((resolve) => {
       const server = createServer(this.handleRequest.bind(this));
       server.listen(this.options.port, () => {
-        this.logger.success(
+        this.logger?.success(
           `${new Date().toISOString()}|${this.constructor.name}|SUCCESS|${
             this.base
           }/${this.options.path}`
@@ -65,12 +65,12 @@ export class HttpServer extends Server {
         new HttpResponse(res, route)
       );
     } catch (error: Exception | any) {
-      this.logger.error(
+      this.logger?.error(
         `${new Date().toISOString()}|${this.base}/${route.path}|ERROR|${
           error.message
         }`
       );
-      res.statusCode = 500;
+      res.statusCode = error.code || 500;
       res.end(error.message);
     }
   }

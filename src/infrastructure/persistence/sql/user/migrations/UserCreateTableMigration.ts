@@ -3,7 +3,7 @@ import type { IDatabase } from "@domain/interfaces/persistence/IDatabase";
 import type { IMigration } from "@domain/interfaces/persistence/IMigration";
 
 export class UserCreateTableMigration implements IMigration {
-  constructor(private readonly logger: ILogger) {}
+  constructor(private readonly logger?: ILogger) {}
 
   async up(db: IDatabase): Promise<void> {
     await db.exec(`
@@ -13,7 +13,7 @@ export class UserCreateTableMigration implements IMigration {
       );
     `);
 
-    this.logger.info("User table created");
+    this.logger?.info("User table created");
   }
 
   async down(db: IDatabase): Promise<void> {
@@ -21,6 +21,6 @@ export class UserCreateTableMigration implements IMigration {
       DROP TABLE IF EXISTS users;
     `);
 
-    this.logger.info("User table deleted");
+    this.logger?.info("User table deleted");
   }
 }
