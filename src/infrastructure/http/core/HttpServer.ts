@@ -1,11 +1,11 @@
 import { Server } from "@domain/abstracts/http/Server";
+import { Exception } from "@domain/exceptions/Exception";
 import type { IRoute } from "@domain/interfaces/http/IRoute";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
 import { type IncomingMessage, type ServerResponse, createServer } from "http";
 import { HttpRequest } from "./HttpRequest";
 import { HttpResponse } from "./HttpResponse";
-import {Exception} from "@domain/exceptions/Exception";
 
 /**
  * Represents an HTTP server that can listen on a port and register controllers.
@@ -41,11 +41,10 @@ export class HttpServer extends Server {
         this.logger.success(
           `${new Date().toISOString()}|${this.constructor.name}|SUCCESS|${
             this.base
-          }`
+          }/${this.options.path}`
         );
         resolve();
       });
-
     });
   }
 
@@ -56,19 +55,20 @@ export class HttpServer extends Server {
    * @param route - The route object containing the method handler, or undefined if no route matches.
    */
   protected async handleRoute(
-      req: IncomingMessage,
-      res: ServerResponse,
-      route: IRoute
+    req: IncomingMessage,
+    res: ServerResponse,
+    route: IRoute
   ): Promise<void> {
     try {
       await route.handler(
-          new HttpRequest(req, this.options, route),
-          new HttpResponse(res, route)
+        new HttpRequest(req, this.options, route),
+        new HttpResponse(res, route)
       );
     } catch (error: Exception | any) {
-      console.log({route});
       this.logger.error(
-          `${new Date().toISOString()}|${this.base}/${route.path}|ERROR|${error.message}`
+        `${new Date().toISOString()}|${this.base}/${route.path}|ERROR|${
+          error.message
+        }`
       );
       res.statusCode = 500;
       res.end(error.message);
@@ -80,7 +80,10 @@ export class HttpServer extends Server {
    * @param req - The incoming HTTP request message.
    * @param res - The outgoing HTTP server response message.
    */
-  private async handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  private async handleRequest(
+    req: IncomingMessage,
+    res: ServerResponse
+  ): Promise<void> {
     const route = this.getRoute(req.method, req.url);
     await this.handleRoute(req, res, route);
   }

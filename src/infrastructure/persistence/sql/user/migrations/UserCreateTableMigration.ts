@@ -1,12 +1,9 @@
+import { ILogger } from "@domain/interfaces/logger/ILogger";
 import type { IDatabase } from "@domain/interfaces/persistence/IDatabase";
 import type { IMigration } from "@domain/interfaces/persistence/IMigration";
-import {ILogger} from "@domain/interfaces/logger/ILogger";
-
 
 export class UserCreateTableMigration implements IMigration {
-
-  constructor(private readonly logger:ILogger) {
-  }
+  constructor(private readonly logger: ILogger) {}
 
   async up(db: IDatabase): Promise<void> {
     await db.exec(`
@@ -19,7 +16,7 @@ export class UserCreateTableMigration implements IMigration {
     this.logger.info("User table created");
   }
 
-  async down(db:IDatabase): Promise<void> {
+  async down(db: IDatabase): Promise<void> {
     await db.exec(`
       DROP TABLE IF EXISTS users;
     `);
