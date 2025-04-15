@@ -22,6 +22,7 @@ export class HttpServer extends Server {
   /**
    * Initializes a new instance of the HttpServer class.
    * @param options - The server options for the HTTP server.
+   * @param logger
    */
   constructor(options: IServerOptions, logger: ILogger) {
     super(options);

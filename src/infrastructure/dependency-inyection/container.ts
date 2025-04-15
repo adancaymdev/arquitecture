@@ -1,35 +1,42 @@
-import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
-import { UserController } from "@presentation/controllers/UserController";
-import { dependency } from "./dependency";
+import {UserServer} from "@infrastructure/http/UserServer";
+import {UserController} from "@presentation/controllers/UserController";
+import {LoggerConsole} from "@infrastructure/logger/LoggerConsole";
+import {IServerOptions} from "@domain/interfaces/http/IServerOptions";
+import {UserRepositorySQL} from "@infrastructure/persistence/sql/user/UserRepositorySQL";
+import {SqliteAdapter} from "@infrastructure/persistence/sql/sqlite/AdapterSqlite";
+import {UserCreateTableMigration} from "@infrastructure/persistence/sql/user/migrations/UserCreateTableMigration";
 
-/**
- * This module provides the dependency injection container.
- *
- * The dependency injection container is a singleton that manages the instances of the application's components.
- * It provides a way to register components and retrieve them with their dependencies resolved.
- *
- * @packageDocumentation
- */
-export const TOKENS = {
-  UserServerOptions: "UserServerOptions",
-  UserController: "UserController",
-  UserControllers: "UserControllers",
-  ILogger: "ILogger",
-};
 
-dependency.register(TOKENS.ILogger, LoggerConsole);
-dependency.register(TOKENS.UserServerOptions, {
-  useValue: {
-    protocol: "http",
-    host: "localhost",
+export const userMs = async (
+    options?: IServerOptions,
+    pathDatabase?: string
+) => {
+
+  const logger = new LoggerConsole();
+  const pathDatabaseDefault = pathDatabase ?? './database.user.db';
+
+  const userServerOptionsDefault: IServerOptions = options ?? {
     port: 3000,
-    path: "api/v1/users",
-  },
-});
-dependency.register(TOKENS.UserController, {
-  useClass: UserController,
-});
+    host: "localhost",
+    path: "api",
+    protocol: "http",
+  }
+  const userDatabase = new SqliteAdapter(pathDatabaseDefault, 'users', logger);
 
-dependency.register(TOKENS.UserControllers, {
-  useValue: [dependency.resolve(TOKENS.UserController)],
-});
+  const userMigration = new UserCreateTableMigration();
+
+  await userMigration.up(userDatabase);
+
+  const userRepository = new UserRepositorySQL(userDatabase)
+  const userController = new UserController(userRepository);
+
+
+   const userServer = new UserServer(
+       userServerOptionsDefault,
+       [userController],
+       logger
+   );
+
+  await userServer.listen();
+}
+

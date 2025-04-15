@@ -1,9 +1,7 @@
 import { Logger } from "@domain/abstracts/logger/Logger";
-import { Injectable } from "@infrastructure/dependency-inyection/dependency";
 /**
  * Implementation of the {@link Logger} interface that logs to the console.
  */
-@Injectable()
 export class LoggerJson extends Logger {
   /**
    * Logs a message to the console.

@@ -1,6 +1,7 @@
 import type { IMethodName } from "@domain/interfaces/http/IMethodName";
 import type { IRoute } from "@domain/interfaces/http/IRoute";
 import "reflect-metadata";
+import {IMethodHandler} from "@domain/interfaces/http/IMethodHandler";
 
 /**
  * Decorador para definir una ruta a partir de la implementación del handler.
@@ -14,18 +15,14 @@ export function HttpMethod(
   routePath: string
 ): MethodDecorator {
   return (target, propertyKey, descriptor: PropertyDescriptor) => {
-    const originalMethod = descriptor.value;
-
+    const originalMethod: IMethodHandler = descriptor.value;
     descriptor.value = function (): IRoute {
       return {
         method: httpMethod,
         path: routePath,
-        handler: async (req: any, res: any) => {
-          await originalMethod.call(this, req, res);
-        },
+        handler: originalMethod,
       };
     };
-
     return descriptor;
   };
 }

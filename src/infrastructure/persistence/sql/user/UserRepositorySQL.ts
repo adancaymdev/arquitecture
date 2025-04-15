@@ -3,11 +3,9 @@ import type { IDatabase } from "@domain/interfaces/persistence/IDatabase";
 import { IUserRepository } from "@domain/interfaces/repositories/IUserRepository";
 
 export class UserRepositorySQL implements IUserRepository {
-  private db: IDatabase;
 
-  constructor(db: IDatabase) {
-    this.db = db;
-  }
+  constructor(private readonly db: IDatabase) {}
+
   findById(id: string): Promise<User> {
     return this.db.get<User>(new Map([["id", id]]));
   }

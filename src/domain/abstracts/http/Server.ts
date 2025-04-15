@@ -55,7 +55,7 @@ export abstract class Server implements IServer {
           name: methodName,
           path: `${this.options.path}${route.path}`,
           method: route.method,
-          handler: route.handler,
+          handler: route.handler.bind(controller),
         });
       });
       this.logger.table(
