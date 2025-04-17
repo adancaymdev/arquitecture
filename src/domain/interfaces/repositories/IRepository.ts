@@ -19,7 +19,7 @@ export interface IRepository<T> {
      *
      * @returns A promise that resolves to an array of users
      */
-    findAll(): Promise<T[]>;
+    findAll(filter?: Partial<T>): Promise<T[]>;
 
     /**
      * Retrieves all users that match the specified filter.
@@ -27,7 +27,7 @@ export interface IRepository<T> {
      * @param filter - The filter to apply.
      * @returns A promise that resolves to an array of users if found, or null if not found.
      */
-    findAllBy(filter: T): Promise<T[]>;
+    findAllBy(filter: Partial<T>): Promise<T[]>;
 
     /**
      * Creates a new user.
@@ -35,7 +35,7 @@ export interface IRepository<T> {
      * @param user - The user to create.
      * @returns A promise that resolves to the id of the created user.
      */
-    create(user: T): Promise<T>;
+    create(dto: T): Promise<T>;
 
     /**
      * Updates an existing user.
@@ -43,7 +43,7 @@ export interface IRepository<T> {
      * @param user - The user to update.
      * @returns A promise that resolves when the user is updated.
      */
-    update(id : string, user: T): Promise<T>;
+    update(id : string, dto: Partial<T>): Promise<T>;
 
     /**
      * Deletes a user by its id.

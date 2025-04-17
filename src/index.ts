@@ -11,7 +11,7 @@ async function bootstrapApplication(): Promise<void> {
   await userMs({
     logger: new LoggerConsole(),
     port: 3000,
-  });
+  });  
 }
 
 bootstrapApplication();

@@ -98,7 +98,8 @@ export abstract class Server implements IServer {
       throw new BadRequestException("Missing method or path");
     }
     const methodLower = method.toLowerCase();
-    const pathSegments = path.split("/").filter(Boolean);
+    const [cleanPath] = path.split("?");
+    const pathSegments = cleanPath.split("/").filter(Boolean);
 
     const route = this.routes.find((r) => {
       if (r.method.toLowerCase() !== methodLower) return false;

@@ -42,12 +42,10 @@ export class UserCreateTableMigration implements IMigration {
     for (const column of columnsToEnsure) {
       try {
         await db.exec(
-          `ALTER TABLE users ADD COLUMN ${column.name} ${column.type};`
+          `ALTER TABLE users ADD COLUMN  ${column.name} ${column.type};`
         );
       } catch (e: any) {
-        if (!e.message.includes("duplicate column name")) {
-          throw e;
-        }
+        this.logger?.error(e.message);
       }
     }
 
@@ -69,3 +67,4 @@ export class UserCreateTableMigration implements IMigration {
     this.logger?.info("User table deleted");
   }
 }
+

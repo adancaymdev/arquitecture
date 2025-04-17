@@ -80,7 +80,7 @@ export class SqliteAdapter implements IDatabase {
     const keys = Array.from(params.keys());
     const values = Array.from(params.values());
     const assignments = keys.map((key) => `${key} = ?`).join(", ");
-    const query = `UPDATE ${this.table} SET ${assignments} WHERE id = ?`;
+    const query = `UPDATE ${this.table} SET ${assignments} WHERE id = ? AND deletedAt IS NULL`;
 
     const result = await this.run(query, ...values, id);
     return this.get<T>(new Map([["id", result]]));
@@ -89,12 +89,14 @@ export class SqliteAdapter implements IDatabase {
   async all<T>(params?: Map<string, unknown>): Promise<T[]> {
     const { clause, values } = this.buildWhereClause(params);
     const query = `SELECT * FROM ${this.table} ${
-      params ? "WHERE" : ""
-    } ${clause}`;
+      params && params.size  > 0 ? "WHERE" : ""
+    } ${clause} ${
+      params && params.size  > 0 ? "and deletedAt IS NULL" : "where deletedAt IS NULL"
+    } `;
 
     return new Promise<T[]>((resolve, reject) => {
       this.logger?.table(query);
-      this.logger?.table(values);
+      values && values.length > 0 && this.logger?.table(values);
       this.db.all<T>(query, values, (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
@@ -104,11 +106,11 @@ export class SqliteAdapter implements IDatabase {
 
   async get<T>(params: Map<string, unknown>): Promise<T> {
     const { clause, values } = this.buildWhereClause(params);
-    const query = `SELECT * FROM ${this.table} WHERE ${clause}`;
+    const query = `SELECT * FROM ${this.table} WHERE ${clause} and deletedAt IS NULL`;
 
     return new Promise<T>((resolve, reject) => {
       this.logger?.table(query);
-      this.logger?.table(values);
+      values && values.length > 0 && this.logger?.table(values);
       this.db.get<T>(query, values, (err, row) => {
         if (err) reject(err);
         else resolve(row);
@@ -117,14 +119,14 @@ export class SqliteAdapter implements IDatabase {
   }
 
   async delete(id: number | string): Promise<void> {
-    const query = `DELETE FROM ${this.table} WHERE id = ?`;
+    const query = `update ${this.table} set deletedAt = datetime('now') where id = ?`;
     await this.run(query, id);
   }
 
   private async run(query: string, ...params: unknown[]): Promise<number> {
     return new Promise<number>((resolve, reject) => {
       this.logger?.table(query);
-      this.logger?.table(params);
+      params && params.length > 0 && this.logger?.table(params);
       this.db.run(query, params, function (err) {
         if (err) reject(err);
         else resolve(this.lastID);
@@ -136,7 +138,8 @@ export class SqliteAdapter implements IDatabase {
     clause: string;
     values: unknown[];
   } {
-    if (!params) {
+    
+    if (!params || params.size === 0) {
       return {
         clause: "",
         values: [],
@@ -146,8 +149,8 @@ export class SqliteAdapter implements IDatabase {
     const values: unknown[] = [];
 
     for (const [key, value] of params) {
-      conditions.push(`${key} = ?`);
-      values.push(value);
+      conditions.push(`${key} like ?`);
+      values.push(`%${value}%`);
     }
 
     return {

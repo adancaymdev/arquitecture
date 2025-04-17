@@ -28,7 +28,8 @@ export abstract class HttpController<T> implements IController {
    * @returns A promise that resolves to an array of users.
    */
   @HttpMethod("get", "/") public async findAll(req: HttpRequest, res: HttpResponse): Promise<void> {
-    const users = await this.repository.findAll();
+    const query = await req.getQuery<Partial<T>>();
+    const users = await this.repository.findAllBy(query);
     res.json(users);
   }
 
@@ -40,7 +41,7 @@ export abstract class HttpController<T> implements IController {
    * @returns A promise that resolves to the created user.
    */
   @HttpMethod("post", "/") public async create(req: HttpRequest, res: HttpResponse): Promise<void> {
-    const user = await this.repository.create(await req.getBody());
+    const user = await this.repository.create(await req.getBody<T>());
     res.json(user);
   }
 
@@ -52,7 +53,7 @@ export abstract class HttpController<T> implements IController {
    */
    @HttpMethod("put", "/:id") public async update(req: HttpRequest, res: HttpResponse): Promise<void> {
     const id = await req.getParam("id");
-    const user = await this.repository.update(id, await req.getBody());
+    const user = await this.repository.update(id, await req.getBody<Partial<T>>());
     res.json(user);
   }
   

@@ -32,8 +32,8 @@ export abstract class SqliteRepository<T> implements IRepository<T> {
    * @param filter - The filter to apply.
    * @returns A promise that resolves to an array of users if found, or an empty array if not found.
    */
-  findAllBy(filter: T): Promise<T[]> {
-    const params = new Map(Object.entries(filter as object));
+  findAllBy(filter: Partial<T>): Promise<T[]> {
+    const params = new Map(Object.entries(filter));
     return this.db.all<T>(params);
   }
   /**
@@ -42,8 +42,8 @@ export abstract class SqliteRepository<T> implements IRepository<T> {
    * @param obj - The user to update, with the id set to the id of the user to update.
    * @returns A promise that resolves to the updated user if successful, or rejects if not.
    */
-  update(id: number | string, obj: T): Promise<T> {
-    const params = new Map(Object.entries(obj as object));
+  update(id: number | string, obj: Partial<T>): Promise<T> {
+    const params = new Map(Object.entries(obj));
     return this.db.update<T>(id, params);
   }
   /**
