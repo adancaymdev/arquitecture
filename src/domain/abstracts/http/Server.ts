@@ -1,5 +1,6 @@
 import { BadRequestException } from "@domain/exceptions/BadRequestException";
 import type { IController } from "@domain/interfaces/http/IController";
+import { IResponse } from "@domain/interfaces/http/IResponse";
 import type { IRoute } from "@domain/interfaces/http/IRoute";
 import type { IServer } from "@domain/interfaces/http/IServer";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
@@ -125,7 +126,7 @@ export abstract class Server implements IServer {
    * @param res - The outgoing HTTP server response message.
    * @param route - The route object containing the method handler, or undefined if no route matches.
    */
-  protected handleRoute(req: any, res: any, route?: IRoute): Promise<HttpResponse> {
+  protected handleRoute(req: any, res: any, route?: IRoute): Promise<IResponse> {
     throw new Error("Method not implemented.");
   }
 }

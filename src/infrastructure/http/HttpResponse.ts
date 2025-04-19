@@ -58,8 +58,9 @@ export class HttpResponse implements IResponse {
    * @param data - The data to send as the response body.
    * @param status - An optional status code for the response.
    */
-  json<T>(data: T, status?: number): void {
+  json<T>(data: T, status?: number): IResponse {
     this.response.setHeader("Content-Type", "application/json");
     this.status(status || 200).send(JSON.stringify(data));
+    return this;
   }
 }

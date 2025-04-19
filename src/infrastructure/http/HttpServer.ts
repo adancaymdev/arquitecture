@@ -6,6 +6,7 @@ import type { ILogger } from "@domain/interfaces/logger/ILogger";
 import { type IncomingMessage, type ServerResponse, createServer } from "http";
 import { HttpRequest } from "./HttpRequest";
 import { HttpResponse } from "./HttpResponse";
+import { IResponse } from "@domain/interfaces/http/IResponse";
 
 /**
  * Represents an HTTP server that can listen on a port and register controllers.
@@ -60,7 +61,7 @@ export class HttpServer extends Server {
     req: IncomingMessage,
     res: ServerResponse,
     route: IRoute
-  ): Promise<HttpResponse> {
+  ): Promise<IResponse> {
     const startTime = process.hrtime.bigint();
     try {
       return route.handler(
@@ -84,7 +85,7 @@ export class HttpServer extends Server {
   private async handleRequest(
     req: IncomingMessage,
     res: ServerResponse
-  ): Promise<HttpResponse> {
+  ): Promise<IResponse> {
     const route = this.getRoute(req.method, req.url);
     return this.handleRoute(req, res, route);
   }

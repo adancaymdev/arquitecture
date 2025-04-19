@@ -9,5 +9,4 @@ export class UserController extends HttpController<User> {
   constructor(repository: IRepository<User>) {
     super(repository);
   }
-
 }

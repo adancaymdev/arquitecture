@@ -1,4 +1,5 @@
 import type { IController } from "@domain/interfaces/http/IController";
+import { IResponse } from "@domain/interfaces/http/IResponse";
 import { IRepository } from "@domain/interfaces/repositories/IRepository";
 import { HttpMethod } from "@infrastructure/http/HttpMethod";
 import type { HttpRequest } from "@infrastructure/http/HttpRequest";
@@ -16,10 +17,10 @@ export abstract class HttpController<T> implements IController {
    * @param res The response object.
    * @returns A promise that resolves to the user if found, or rejects if not found.
    */
-  @HttpMethod("get", "/:id") public async findOne(req: HttpRequest, res: HttpResponse): Promise<void> {
+  @HttpMethod("get", "/:id") public async findOne(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const id = await req.getParam("id");
     const user = await this.repository.findById(id);
-    res.json(user);
+    return res.json(user)
   }
   /**
    * Retrieves all users.
@@ -27,10 +28,10 @@ export abstract class HttpController<T> implements IController {
    * @param res The response object.
    * @returns A promise that resolves to an array of users.
    */
-  @HttpMethod("get", "/") public async findAll(req: HttpRequest, res: HttpResponse): Promise<void> {
+  @HttpMethod("get", "/") public async findAll(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const query = await req.getQuery<Partial<T>>();
     const users = await this.repository.findAllBy(query);
-    res.json(users);
+    return res.json(users);
   }
 
   
@@ -40,9 +41,9 @@ export abstract class HttpController<T> implements IController {
    * @param res The response object.
    * @returns A promise that resolves to the created user.
    */
-  @HttpMethod("post", "/") public async create(req: HttpRequest, res: HttpResponse): Promise<void> {
+  @HttpMethod("post", "/") public async create(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const user = await this.repository.create(await req.getBody<T>());
-    res.json(user);
+    return res.json(user);
   }
 
   /**
@@ -51,10 +52,10 @@ export abstract class HttpController<T> implements IController {
    * @param res The response object.
    * @returns A promise that resolves to the updated user.
    */
-   @HttpMethod("put", "/:id") public async update(req: HttpRequest, res: HttpResponse): Promise<void> {
+   @HttpMethod("put", "/:id") public async update(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const id = await req.getParam("id");
     const user = await this.repository.update(id, await req.getBody<Partial<T>>());
-    res.json(user);
+    return res.json(user);
   }
   
   /**
@@ -63,9 +64,9 @@ export abstract class HttpController<T> implements IController {
    * @param res The response object.
    * @returns A promise that resolves when the user is deleted.
    */
-  @HttpMethod("delete", "/:id") public async delete(req: HttpRequest, res: HttpResponse): Promise<void> {
+  @HttpMethod("delete", "/:id") public async delete(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const id = await req.getParam("id");
     const user = await this.repository.delete(id);
-    res.json(user);
+    return res.json(user);
    }
 }
