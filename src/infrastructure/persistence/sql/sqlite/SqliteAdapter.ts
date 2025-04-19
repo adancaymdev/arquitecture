@@ -14,9 +14,6 @@ export class SqliteAdapter implements IDatabase {
    * @param logger - The logger to use. Optional.
    */
   constructor(path: string, table: string, logger?: ILogger) {
-    if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(table)) {
-      throw new Error(`Invalid table name: ${table}`);
-    }
     this.db = new sqlite3.Database(path);
     this.table = table;
     this.logger = logger;

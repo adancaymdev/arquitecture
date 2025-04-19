@@ -5,7 +5,6 @@ import type { IRoute } from "@domain/interfaces/http/IRoute";
 import type { IServer } from "@domain/interfaces/http/IServer";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
-import { HttpResponse } from "@infrastructure/http/HttpResponse";
 import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 /**
  * Represents an HTTP server that can listen on a port and register controllers.
