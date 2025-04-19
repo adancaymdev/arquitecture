@@ -8,7 +8,7 @@ import type { ILogger } from "@domain/interfaces/logger/ILogger";
  * The methods of the logger must be marked as `void` to allow the use of `void`.
  * The methods of the logger will be called with the message and optional parameters as arguments.
  */
-export class Logger implements ILogger {
+export abstract class Logger implements ILogger {
   /**
    * Logs a message to the console.
    *
