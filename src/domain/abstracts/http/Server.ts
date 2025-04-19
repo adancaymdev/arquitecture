@@ -4,6 +4,7 @@ import type { IRoute } from "@domain/interfaces/http/IRoute";
 import type { IServer } from "@domain/interfaces/http/IServer";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
+import { HttpResponse } from "@infrastructure/http/HttpResponse";
 import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 /**
  * Represents an HTTP server that can listen on a port and register controllers.
@@ -34,7 +35,7 @@ export abstract class Server implements IServer {
    * @param controllers - The controllers to register with the server.
    * @throws {Error} If a route with the same name is already registered.
    */
-  public addController(...controllers: IController[]) {
+  public addController(...controllers: IController[]): void {
     controllers.forEach((controller) => {
       const methodNames = new Set<string>();
       let proto = Object.getPrototypeOf(controller);
@@ -93,7 +94,7 @@ export abstract class Server implements IServer {
    * @param path - The URL of the request.
    * @returns The route matching the request's method and URL, or undefined if no route matches.
    */
-  protected getRoute(method?: string, path?: string) {
+  protected getRoute(method?: string, path?: string): IRoute {
     if (!method || !path) {
       throw new BadRequestException("Missing method or path");
     }
@@ -124,7 +125,7 @@ export abstract class Server implements IServer {
    * @param res - The outgoing HTTP server response message.
    * @param route - The route object containing the method handler, or undefined if no route matches.
    */
-  protected handleRoute(req: any, res: any, route?: IRoute): void {
+  protected handleRoute(req: any, res: any, route?: IRoute): Promise<HttpResponse> {
     throw new Error("Method not implemented.");
   }
 }

@@ -37,6 +37,7 @@ export class HttpServer extends Server {
   public listen(): Promise<void> {
     return new Promise((resolve) => {
       const server = createServer(this.handleRequest.bind(this));
+
       server.listen(this.options.port, () => {
         this.logger?.success(
           `${new Date().toISOString()}|${this.constructor.name}|SUCCESS|${
@@ -45,6 +46,7 @@ export class HttpServer extends Server {
         );
         resolve();
       });
+    
     });
   }
 
@@ -58,16 +60,17 @@ export class HttpServer extends Server {
     req: IncomingMessage,
     res: ServerResponse,
     route: IRoute
-  ): Promise<void> {
+  ): Promise<HttpResponse> {
     const startTime = process.hrtime.bigint();
     try {
-      await route.handler(
+      return route.handler(
         new HttpRequest(req, this.options, route),
         new HttpResponse(res, route)
       );
     } catch (error: Exception | any) {
       res.statusCode = error.code || 500;
       res.end(error.message);
+      return new HttpResponse(res, route);
     } finally {
       this.logRequestOnClose(req, res, startTime);
     }
@@ -81,9 +84,9 @@ export class HttpServer extends Server {
   private async handleRequest(
     req: IncomingMessage,
     res: ServerResponse
-  ): Promise<void> {
+  ): Promise<HttpResponse> {
     const route = this.getRoute(req.method, req.url);
-    await this.handleRoute(req, res, route);
+    return this.handleRoute(req, res, route);
   }
 
   /**
