@@ -15,4 +15,10 @@ module.exports = {
   testMatch: ["**/__tests__/**/*.spec.ts", "**/?(*.)+(spec|test).ts"],
   moduleFileExtensions: ["ts", "js", "json"],
   clearMocks: true,
+  coverageDirectory: "coverage",
+  collectCoverage: true,
+  coveragePathIgnorePatterns: [
+    "<rootDir>/src/test/",
+    "\\.test\\.ts$", 
+  ]
 };

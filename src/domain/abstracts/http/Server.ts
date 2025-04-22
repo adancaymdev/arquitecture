@@ -1,13 +1,12 @@
-import {BadRequestException} from "@domain/exceptions/BadRequestException";
-import type {IController} from "@domain/interfaces/http/IController";
-import {IResponse} from "@domain/interfaces/http/IResponse";
-import type {IRoute} from "@domain/interfaces/http/IRoute";
-import type {IServer} from "@domain/interfaces/http/IServer";
-import type {IServerOptions} from "@domain/interfaces/http/IServerOptions";
-import type {ILogger} from "@domain/interfaces/logger/ILogger";
-import {LoggerConsole} from "@infrastructure/logger/LoggerConsole";
-import {IMethodHandler} from "@domain/interfaces/http/IMethodHandler";
-import {IMethodName} from "@domain/interfaces/http/IMethodName";
+import { BadRequestException } from "@domain/exceptions/BadRequestException";
+import type { IController } from "@domain/interfaces/http/IController";
+import { IMethodHandler } from "@domain/interfaces/http/IMethodHandler";
+import { IResponse } from "@domain/interfaces/http/IResponse";
+import type { IRoute } from "@domain/interfaces/http/IRoute";
+import type { IServer } from "@domain/interfaces/http/IServer";
+import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
+import type { ILogger } from "@domain/interfaces/logger/ILogger";
+import { LoggerConsole } from "@infrastructure/logger/LoggerConsole";
 
 /**
  * Represents an HTTP server that can listen on a port and register controllers.
