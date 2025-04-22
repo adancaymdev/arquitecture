@@ -125,13 +125,37 @@ export class HttpRequest implements IRequest {
    */
   getBody<T>(): Promise<T> {
     return new Promise((resolve, reject) => {
-      try {
-        let body = "";
-        this.request.on("data", (chunk) => (body += chunk));
-        this.request.on("end", () => resolve(JSON.parse(body) as T));
-      } catch (error) {
-        reject(new BadRequestException("Body not found"));
-      }
+      let body = "";
+  
+      const onData = (chunk: string) => {
+        body += chunk;
+      };
+  
+      const onEnd = () => {
+        try {
+          const parsedBody = JSON.parse(body) as T;
+          resolve(parsedBody);
+        } catch (error) {
+          reject(new BadRequestException("Invalid JSON body "));
+        } finally {
+          cleanup();
+        }
+      };
+  
+      const onError = (error: Error) => {
+        reject(new BadRequestException(`Error reading body ${error.message}`));
+        cleanup();
+      };
+  
+      const cleanup = () => {
+        this.request.off("data", onData);
+        this.request.off("end", onEnd);
+        this.request.off("error", onError);
+      };
+  
+      this.request.on("data", onData);
+      this.request.on("end", onEnd);
+      this.request.on("error", onError);
     });
   }
 }

@@ -1,5 +1,4 @@
 import { Server } from "@domain/abstracts/http/Server";
-import { Exception } from "@domain/exceptions/Exception";
 import type { IRoute } from "@domain/interfaces/http/IRoute";
 import type { IServerOptions } from "@domain/interfaces/http/IServerOptions";
 import type { ILogger } from "@domain/interfaces/logger/ILogger";
@@ -63,18 +62,12 @@ export class HttpServer extends Server {
     route: IRoute
   ): Promise<IResponse> {
     const startTime = process.hrtime.bigint();
-    try {
-      return route.handler(
-        new HttpRequest(req, this.options, route),
-        new HttpResponse(res, route)
-      );
-    } catch (error: Exception | any) {
-      res.statusCode = error.code || 500;
-      res.end(error.message);
-      return new HttpResponse(res, route);
-    } finally {
-      this.logRequestOnClose(req, res, startTime);
-    }
+    const result = await route.handler(
+      new HttpRequest(req, this.options, route),
+      new HttpResponse(res, route)
+    );
+    this.logRequestOnClose(req, res, startTime);
+    return result;
   }
 
   /**

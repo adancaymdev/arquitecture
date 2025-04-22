@@ -63,4 +63,17 @@ export class HttpResponse implements IResponse {
     this.status(status || 200).send(JSON.stringify(data));
     return this;
   }
+
+  /**
+   * Ends the response with the given data in JSON format.
+   *
+   * If the given status code is not specified, defaults to 200.
+   *
+   * @param data - The data to send as the response body.
+   * @param status - An optional status code for the response.
+   */
+  end(): IResponse {
+    this.response.end();
+    return this;
+  }
 }

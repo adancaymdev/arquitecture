@@ -21,5 +21,12 @@ export interface IResponse {
    * @param data - The data to be serialized to JSON and sent as the response body.
    * @param status - The status code to set. Defaults to 200.
    */
-  json<T>(data: T, status?: number): void;
+  json<T>(data: T, status?: number): IResponse;
+
+  /**
+   * Sets the response body to a JSON object and ends the response.
+   * @param data - The data to be serialized to JSON and sent as the response body.
+   * @param status - The status code to set. Defaults to 200.
+   */
+  end(): IResponse;
 }

@@ -8,7 +8,7 @@ import type { HttpResponse } from "@infrastructure/http/HttpResponse";
 /**
  * Controller that handles the requests related to users.
  */
-export abstract class HttpController<T> implements IController {
+export class HttpController<T> implements IController {
 
   constructor(protected readonly repository: IRepository<T>) {}
   /**
@@ -20,7 +20,7 @@ export abstract class HttpController<T> implements IController {
   @HttpMethod("get", "/:id") public async findOne(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const id = await req.getParam("id");
     const user = await this.repository.findById(id);
-    return res.json(user)
+    return res.json(user).end();
   }
   /**
    * Retrieves all users.
@@ -31,7 +31,7 @@ export abstract class HttpController<T> implements IController {
   @HttpMethod("get", "/") public async findAll(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const query = await req.getQuery<Partial<T>>();
     const users = await this.repository.findAllBy(query);
-    return res.json(users);
+    return res.json(users).end();
   }
 
   
@@ -43,7 +43,7 @@ export abstract class HttpController<T> implements IController {
    */
   @HttpMethod("post", "/") public async create(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const user = await this.repository.create(await req.getBody<T>());
-    return res.json(user);
+    return res.json(user).end();
   }
 
   /**
@@ -55,7 +55,7 @@ export abstract class HttpController<T> implements IController {
    @HttpMethod("put", "/:id") public async update(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const id = await req.getParam("id");
     const user = await this.repository.update(id, await req.getBody<Partial<T>>());
-    return res.json(user);
+    return res.json(user).end();
   }
   
   /**
@@ -66,7 +66,7 @@ export abstract class HttpController<T> implements IController {
    */
   @HttpMethod("delete", "/:id") public async delete(req: HttpRequest, res: HttpResponse): Promise<IResponse> {
     const id = await req.getParam("id");
-    const user = await this.repository.delete(id);
-    return res.json(user);
+    await this.repository.delete(id);
+    return res.status(204).end();
    }
 }

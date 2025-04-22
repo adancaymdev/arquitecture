@@ -1,4 +1,3 @@
-import { HttpResponse } from "@infrastructure/http/HttpResponse";
 import type { IRequest } from "./IRequest";
 import type { IResponse } from "./IResponse";
 
@@ -8,4 +7,4 @@ import type { IResponse } from "./IResponse";
  * @param req - The request object.
  * @param res - The response object.
  */
-export type IMethodHandler =  (req: IRequest, res: IResponse) => Promise<HttpResponse>;
+export type IMethodHandler =  (req: IRequest, res: IResponse) => Promise<IResponse>;

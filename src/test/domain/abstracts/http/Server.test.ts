@@ -1,8 +1,8 @@
 import "reflect-metadata";
-import {Server} from "./Server";
 import {IController} from "@domain/interfaces/http/IController";
 import {IServerOptions} from "@domain/interfaces/http/IServerOptions";
 import {BadRequestException} from "@domain/exceptions/BadRequestException";
+import { Server } from "@domain/abstracts/http/Server";
 
 
 class MockController implements IController {
