@@ -2,5 +2,5 @@ projectKey=arquitecture
 serverUrl=http://localhost:9001
 serverVersion=9.9.8.100196
 dashboardUrl=http://localhost:9001/dashboard?id=arquitecture
-ceTaskId=AZZbVadJbWmicK_OtgVX
-ceTaskUrl=http://localhost:9001/api/ce/task?id=AZZbVadJbWmicK_OtgVX
+ceTaskId=AZZbV4GpbWmicK_OtgVY
+ceTaskUrl=http://localhost:9001/api/ce/task?id=AZZbV4GpbWmicK_OtgVY
